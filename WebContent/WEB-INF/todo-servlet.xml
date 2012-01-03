@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+	<bean id="databasePropertiesConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="database.properties" />
+	</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${database.driverClassName}" />
+		<property name="url" value="${database.connectionString}" />
+		<property name="username" value="${database.userName}" />
+		<property name="password" value="${database.userPassword}" />
+	</bean>
+
+	<bean id="jdbcProvider" class="com.todo.data.jdbc.JDBCToDoDataProvider">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!--  <bean id="hibernateSessionFactory"
+		class="org.hibernate.SessionFactory">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingResources">
+			<list>
+				<value>Folder.hbm.xml</value>
+				<value>Task.hbm.xml</value>
+				<value>Priority.hbm.xml</value>
+				<value>User.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect=org.hibernate.dialect.MySQLDialect
+			</value>
+		</property>
+	</bean>-->
+
+	<bean id="hibernateProvider" class="com.todo.data.hibernate.HibernateToDoDataProvider">
+		<!--  <property name="sessionFactory" ref="hibernateSessionFactory" />-->
+	</bean>
+
+	<bean id="dataproviderPropertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="dataprovider.properties" />
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages" />
+	</bean>
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<bean name="/hello.htm" class="com.todo.controllers.ToDoController" />
+
+	<bean name="/createtask.htm" class="com.todo.controllers.CreateTaskController">
+		<property name="sessionForm" value="true" />
+		<property name="commandName" value="createTask" />
+		<property name="commandClass" value="com.todo.service.CreateTask" />
+		<property name="validator">
+			<bean class="com.todo.service.CreateTaskValidator" />
+		</property>
+		<property name="formView" value="createtask" />
+		<property name="successView" value="hello.htm" />
+	</bean>
+
+</beans>

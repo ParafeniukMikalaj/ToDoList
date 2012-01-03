@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+	<table catalog="todo" name="priority">
+		<column name="id"></column>
+		<column name="description"></column>
+		<column name="user_id"></column>
+	</table>
+	<table catalog="todo" name="folder">
+		<column name="id"></column>
+		<column name="description"></column>
+		<column name="user_id"></column>
+		<column name="parent_id"></column>
+	</table>
+	<table catalog="todo" name="task">
+		<column name="id"></column>
+		<column name="description"></column>
+		<column name="priority_id"></column>
+		<column name="creation_date"></column>
+		<column name="expiration_date"></column>
+		<column name="user_id"></column>
+		<column name="delayed_times"></column>
+		<column name="folder_id"></column>
+		<column name="x"></column>
+		<column name="y"></column>
+	</table>
+	<table catalog="todo" name="user">
+		<column name="id"></column>
+		<column name="name"></column>
+		<column name="email"></column>
+		<column name="password"></column>
+	</table>
+</hibernate-reverse-engineering>

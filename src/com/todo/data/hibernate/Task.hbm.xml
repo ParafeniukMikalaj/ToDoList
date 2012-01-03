@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 30.12.2011 17:46:26 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.todo.data.hibernate.Task" table="task" catalog="todo">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="user" class="com.todo.data.hibernate.User" fetch="select">
+            <column name="user_id" />
+        </many-to-one>
+        <many-to-one name="priority" class="com.todo.data.hibernate.Priority" fetch="select">
+            <column name="priority_id" />
+        </many-to-one>
+        <many-to-one name="folder" class="com.todo.data.hibernate.Folder" fetch="select">
+            <column name="folder_id" />
+        </many-to-one>
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+        <property name="creationDate" type="java.lang.Long">
+            <column name="creation_date" />
+        </property>
+        <property name="expirationDate" type="java.lang.Long">
+            <column name="expiration_date" />
+        </property>
+        <property name="delayedTimes" type="java.lang.Integer">
+            <column name="delayed_times" />
+        </property>
+        <property name="x" type="java.lang.Integer">
+            <column name="x" />
+        </property>
+        <property name="y" type="java.lang.Integer">
+            <column name="y" />
+        </property>
+    </class>
+</hibernate-mapping>
