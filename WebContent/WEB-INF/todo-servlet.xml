@@ -7,12 +7,12 @@
        http://www.springframework.org/schema/context 
        http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<context:component-scan base-package="com.todo.controllers"/>
 
-	<bean id="databasePropertiesConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="database.properties" />
-	</bean>
+	<!-- properties which contain database connection string, user name, password, etc. -->
+	<context:property-placeholder location="database.properties"/>
 
+	<!-- Basic datasource which data providers will be using -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${database.driverClassName}" />
@@ -21,6 +21,7 @@
 		<property name="password" value="${database.userPassword}" />
 	</bean>
 
+	<!-- jdbc data provider configuration -->
 	<bean id="jdbcProvider" class="com.todo.data.jdbc.JDBCToDoDataProvider">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
@@ -44,13 +45,10 @@
 	</bean>-->
 
 	<bean id="hibernateProvider" class="com.todo.data.hibernate.HibernateToDoDataProvider">
-		<!--  <property name="sessionFactory" ref="hibernateSessionFactory" />-->
+		<!-- <property name="sessionFactory" ref="hibernateSessionFactory" /> -->
 	</bean>
 
-	<bean id="dataproviderPropertyConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="dataprovider.properties" />
-	</bean>
+	<context:property-placeholder location="dataprovider.properties"/>
 
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -63,11 +61,11 @@
 			value="org.springframework.web.servlet.view.JstlView"></property>
 		<property name="prefix" value="/WEB-INF/jsp/"></property>
 		<property name="suffix" value=".jsp"></property>
-	</bean>
+	</bean> 
 
 	<bean name="/hello.htm" class="com.todo.controllers.ToDoController" />
 
-	<bean name="/createtask.htm" class="com.todo.controllers.CreateTaskController">
+	<!--  <bean name="/createtask.htm" class="com.todo.controllers.CreateTaskController">
 		<property name="sessionForm" value="true" />
 		<property name="commandName" value="createTask" />
 		<property name="commandClass" value="com.todo.service.CreateTask" />
@@ -76,6 +74,6 @@
 		</property>
 		<property name="formView" value="createtask" />
 		<property name="successView" value="hello.htm" />
-	</bean>
+	</bean>-->
 
 </beans>

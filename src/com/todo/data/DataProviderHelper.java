@@ -1,23 +1,29 @@
 package com.todo.data;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 public class DataProviderHelper {
 	private Properties prop = null;
 	private String defaultStringName = "default";
 	private String fileName = "../../dataprovider.properties";
+	protected final Log logger = LogFactory.getLog(getClass());
 
 	private Properties getProperties() {
 		if (prop != null)
 			return prop;
 		prop = new Properties();
 		try {
+			String currentDir = new File(".").getAbsolutePath();
+			logger.info("current directory is "+currentDir);
 			prop = PropertiesLoaderUtils.loadAllProperties(fileName);
 		} catch (FileNotFoundException e) {
 			System.err.println("File dataprovider.properties not found");

@@ -3,7 +3,7 @@
 
 <html>
 <head>
-  <title><fmt:message key="title"/></title>
+  <title><fmt:message key="heading"/></title>
   <style>
     .error { color: red; }
   </style>  

@@ -1,7 +1,7 @@
 package com.todo.controllers;
 
-import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +36,7 @@ public class ToDoController implements Controller {
 		logger.info("retrieving tasks. count =  " + tasks.size());
 		Map<String, Object> myModel = new HashMap<String, Object>();
 		myModel.put("now", now);
-		myModel.put("tasks", tasks);
+		myModel.put("tasks", tasks); 
 		
 		return new ModelAndView("hello", "model", myModel);
 	}
