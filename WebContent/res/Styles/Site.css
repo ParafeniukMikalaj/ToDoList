@@ -1,0 +1,338 @@
+html {
+	font-size: .85em;
+	font-family: "Trebuchet MS", Verdana, Helvetica, Sans-Serif;
+	height: 100%;
+	
+}
+body {
+	background-color: #ddd;
+	margin: 0;
+    padding: 0;
+	color: #696969;
+	height: 100%;
+}
+fieldset {
+	border: 4px solid;
+	border-color: #696969;
+}
+label {
+	height: 29px;
+	font-size: 10px;
+	font-weight: bold;
+	margin-left: 3px;
+	margin-top: 2px;
+	padding-left: 15px;
+	padding-bottom: 3px;
+}
+.loginContainer {
+	position: relative;
+	top: -80px;
+}
+.loginButton {
+	height: 80px;
+	margin-top: 30px;
+	margin-right: 5px;
+	position: absolute;
+	right: 0;
+	font-size: 18px;
+	text-decoration: none;
+}
+.loginButton a {
+	text-decoration: none;
+}
+input[type=text] {
+	min-width: 150px;
+}
+input[type=text].minified {
+	width: 130px;
+	min-width: 130px;
+}
+input[type=submit] {
+	width: 245px;
+}
+#central {
+	background-color: white;
+	margin: 0 auto;
+	width: 90%;
+	height: 96%;
+	border-radius: 20px, 20px, 0px, 0px;
+	-webkit-border-radius: 20px 20px 0px 0px;
+	-moz-border-radius: 20px 20px 0px 0px;
+	-khtml-border-radius: 20px 20px 0px 0px;
+}
+.placeholder
+{
+	height:4%;
+}
+.body
+{
+	background-color: white;
+	overflow-y: auto;
+}
+.error {
+	color: red;
+}
+.errorTask {
+	color: red;
+	background-color: #FFFFD5;
+	font-size: 16px;
+	text-align: center;
+}
+.errorInput {
+	background-color: #FFFFD5;
+	border: 2px solid red;
+	color: red;
+}
+.errorblock {
+	border: 2px solid red;
+	color: red;
+	margin: 10px;
+	padding: 10px;
+	background-color: #FFD8DC;
+}
+.headerImage {
+	margin-left: 20px;
+	width: 80px;
+	height: 80px;
+	float: left;
+}
+.headerLinks {
+	background-color: #FFF9BB;
+}
+.headerLinks a {
+	color: #696969;
+	font-size: 20pt;
+	padding-left: 10pt;
+	padding-right: 10pt;
+	text-decoration: none;
+}
+.headerLinks a:hover, .headerLinks a:active {
+	color: #B83FFF;
+	background-color: #FFEF99;
+	text-decoration: none;
+	border-left: 1px solid #FFEF99;
+}
+a.selectedLink, a.selectedLink:hover, a.selectedLink:active {
+	background-color: blue;
+	background-color: #FFC15E;
+}
+.selectedInput {
+	border: 2px solid #3DB4FF;
+	background-color: #D8F7FF;
+}
+.checkedLabel {
+	background: url("/ToDoList/res/images/ok.jpg") no-repeat scroll 0 0 transparent;
+	color: green;
+}
+label.error {
+	background: url("/ToDoList/res/images/error.jpg") no-repeat scroll 0 0 transparent;
+	color: red;
+}
+label.checked {
+	background: url("/ToDoList/res/images/ok.jpg") no-repeat scroll 0 0 transparent;
+	color: green;
+}
+img.validationImages {
+	width: 25px;
+	height: 25px;
+	display: none;
+}
+div.login {
+	position: relative;
+	left: 50%;
+	margin-left: -225px;
+	margin-top: 40px;
+	width: 450px;
+}
+div.login fieldset {
+	background: #FFF9BB;
+}
+.loginSpan {
+	min-width: 300px;
+	text-align: right;
+}
+#title {
+	display: table-cell;
+	vertical-align: middle;
+	height: 80px;
+	font-size: 25pt;
+}
+div.about {
+	margin: 0 10px;
+}
+div.about p {
+	text-indent: 20px;
+	text-align: justify;
+	font-size: 18px;
+}
+ul.about li{
+	font-size: 18px;
+}
+.tasks
+{
+	padding: 10px;
+	height: 100%;
+}	
+.treeContainer
+{
+	width: 20%;
+	float: left;	
+}
+.taskContainer
+{
+	width: 59%;
+	float: left;
+}
+.tasksHeader
+{
+	font-size: 22px;
+	text-align: center;
+}
+.settingsContainer
+{
+	position: relative;
+	width: 20%;
+	margin-left: 5px;
+	float: left;
+}
+.task
+{
+	height: 40px;
+	clear: both;
+	background-color: #FFE0A8;
+	width: 100%;
+	border: solid 2px #FFCD7C;
+	float left;
+	border-radius: 5px, 5px, 5px, 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-khtml-border-radius: 5px;
+}
+
+.taskPriority
+{
+	background-color: #A0A0A0;
+	border: solid 2px #404040;
+	margin-left: 3px;
+    margin-top: 3px;
+	height: 30px;
+	width: 30px;
+	float: left;
+}
+.taskDescription
+{
+	float: left;
+	text-align: left;
+	height: 30px;
+	padding: 4px;
+	margin-top: 7px;
+	max-width: 80%;
+	text-align: center left;
+}
+.taskAddDescription
+{
+	float: left;
+	text-align: left;
+	height: 30px;
+	padding: 4px;
+	margin-top: 6px;
+	max-width: 80%;
+	text-align: center left;
+}
+.prioritySelect
+{
+	float: right;
+	margin-right: 5px;
+    margin-top: 10px;
+}
+.delayed
+{
+	background-color: #FFC3BC;
+    border: 3px solid #FF6B68;
+    border-radius: 15px 15px 15px 15px;
+    color: red;
+    float: right;
+    font-size: 25px;
+    height: 30px;
+    margin: 3px 5px 2px;
+    text-align: center;
+    width: 30px;
+}
+.zero
+{
+	background-color: #AFB9FF;
+    border: 3px solid #93A0FF;
+	color: blue;
+}
+.hidden
+{
+	display: none;
+}
+.left
+{
+	float:left;
+}
+input[type=submit].add
+{
+	margin-top: 4px;
+	width: 36px;
+	height: 36px;
+	background: url("/ToDoList/res/images/add.png") no-repeat scroll 0 0 transparent;
+	border: none;
+	float: right;
+}
+input[type=submit].add:active
+{
+	background: url("/ToDoList/res/images/add-hover.png") no-repeat scroll 0 0 transparent;
+}
+input[type=submit].remove
+{
+	margin-top: 4px;
+	width: 36px;
+	height: 36px;
+	background: url("/ToDoList/res/images/remove.png") no-repeat scroll 0 0 transparent;
+	border: none;
+	float: right;
+}
+input[type=submit].remove:active
+{
+	background: url("/ToDoList/res/images/remove-hover.png") no-repeat scroll 0 0 transparent;
+}
+.priorityContainer
+{
+	height: 40px;
+	clear: both;
+	background-color: #FFE0A8;
+	width: 100%;
+	border: solid 2px #FFCD7C;
+	float left;
+	border-radius: 5px, 5px, 5px, 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-khtml-border-radius: 5px;
+}
+.priorityColor
+{
+	background-color: #A0A0A0;
+	border: solid 2px #404040;
+	margin-left: 3px;
+    margin-top: 3px;
+	height: 30px;
+	width: 30px;
+	float: left;
+}
+.priorityName
+{
+	float: left;
+	text-align: left;
+	height: 30px;
+	padding: 4px;
+	margin-top: 7px;
+	max-width: 80%;
+	text-align: center left;
+}
+.add
+{
+	background-color: #AFFFB7;
+	border: solid 2px #54FF7C;
+}

@@ -1,9 +1,15 @@
 package com.todo.data.hibernate;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.annotation.Resource;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-//import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.stereotype.Component;
 
 import com.todo.data.TestableToDoDataProvider;
 import com.todo.entities.Folder;
@@ -11,153 +17,591 @@ import com.todo.entities.Priority;
 import com.todo.entities.Task;
 import com.todo.entities.User;
 
+@Component(value = "hibernateProvider")
+@SuppressWarnings("unchecked")
 public class HibernateToDoDataProvider implements TestableToDoDataProvider {
-	
-	//private HibernateTemplate hibernateTemplate;
-	private SessionFactory sessionFactory;
-	
+
+	private static SessionFactory sessionFactory;
+
+	@Resource(name = "hibernateSessionFactory")
 	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-       // this.hibernateTemplate = new HibernateTemplate(sessionFactory);
-    }
+		HibernateToDoDataProvider.sessionFactory = sessionFactory;
+	}
 
 	@Override
-	public void createTask(Task task) {
-		throw new UnsupportedOperationException();
+	public int createTask(Task task) {
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.save(task);
+			Query query = session.createQuery(
+					"select max(id) from Task where user_id = :user_id and folder_id = :folder_id")
+					.setInteger("user_id", task.getUserId())
+					.setInteger("folder_id", task.getFolderId());
+			int id = ((Integer) query.uniqueResult()).intValue();
+			session.getTransaction().commit();
+			return id;
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+		return 0;
 	}
 
 	@Override
 	public Task getTaskById(int id) {
-		throw new UnsupportedOperationException();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			return (Task) session.get(Task.class, id);
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+	}
+
+	@Override
+	public ArrayList<Task> getSubTasks(int user_id, int folder_id) {
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			Query query = session
+					.createQuery(
+							"from Task where user_id = :user_id and folder_id = :folder_id")
+					.setInteger("user_id", user_id)
+					.setInteger("folder_id", folder_id);
+			return new ArrayList<Task>(query.list());
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
 	public ArrayList<Task> getAllTasks() {
-		throw new UnsupportedOperationException();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			return new ArrayList<Task>(session.createCriteria(Task.class)
+					.list());
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+
 	}
 
 	@Override
 	public void updateTask(Task task) {
-		throw new UnsupportedOperationException();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.update(task);
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
 	public void deleteTask(int id) {
-		throw new UnsupportedOperationException();
-
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.createQuery(
+					"delete from Task where id = " + String.valueOf(id))
+					.executeUpdate();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
-	public void createFolder(Folder folder) {
-		throw new UnsupportedOperationException();
-
+	public int createFolder(Folder folder) {
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.save(folder);
+			Query query = session.createQuery(
+					"select max(id) from Folder where user_id = :user_id")
+					.setInteger("user_id", folder.getUserId());
+			int id = ((Integer) query.uniqueResult()).intValue();
+			session.getTransaction().commit();
+			return id;
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+		return 0;
 	}
 
 	@Override
 	public Folder getFolderById(int id) {
-		throw new UnsupportedOperationException();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			return (Folder) session.get(Folder.class, id);
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+	}
+
+	@Override
+	public ArrayList<Folder> getSubFolders(int user_id, int parent_id) {
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			Query query = session
+					.createQuery(
+							" from Folder where user_id = :user_id and parent_id = :parent_id")
+					.setInteger("user_id", user_id)
+					.setInteger("parent_id", parent_id);
+			return new ArrayList<Folder>(query.list());
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
 	public ArrayList<Folder> getAllFolders() {
-		throw new UnsupportedOperationException();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			return new ArrayList<Folder>(session.createCriteria(Folder.class)
+					.list());
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+
 	}
 
 	@Override
 	public void updateFolder(Folder folder) {
-		throw new UnsupportedOperationException();
-
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.update(folder);
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
 	public void deleteFolder(int id) {
-		throw new UnsupportedOperationException();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.createQuery(
+					"delete from Folder where id = " + String.valueOf(id))
+					.executeUpdate();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 
 	}
 
 	@Override
-	public void close() {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public void createUser(User user) {
-		sessionFactory.getCurrentSession().save(user);
+	public int createUser(User user) {
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.save(user);
+			Query query = session.createQuery(
+					"select max(id) from User where name = :name and password = :password")
+					.setString("name", user.getName())
+					.setString("password", user.getPassword());
+			int id = ((Integer) query.uniqueResult()).intValue();
+			session.getTransaction().commit();
+			return id;
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+		return 0;
 	}
 
 	@Override
 	public User getUserById(int id) {
-		throw new UnsupportedOperationException();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			return (User) session.get(User.class, id);
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+	}
+
+	@Override
+	public User getUserByName(String name) {
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			Query query = session.createQuery("from User where name = :name")
+					.setString("name", name);
+			List<User> users = query.list();
+			if (users.size() == 0)
+				return null;
+			return users.get(0);
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+	}
+
+	@Override
+	public boolean usernameAvailable(String name) {
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			Query query = session.createQuery(
+					"select count(name) from User where name = :name")
+					.setString("name", name);
+			int count = ((Long) query.uniqueResult()).intValue();
+			if (count == 0)
+				return true;
+			return false;
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+	}
+
+	@Override
+	public boolean emailAvailable(String email) {
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			Query query = session.createQuery(
+					"select count(name) from User where email = :email")
+					.setString("email", email);
+			int count = ((Long) query.uniqueResult()).intValue();
+			if (count == 0)
+				return true;
+			return false;
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
 	public ArrayList<User> getAllUsers() {
-		throw new UnsupportedOperationException();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			return new ArrayList<User>(session.createCriteria(User.class)
+					.list());
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
 	public void updateUser(User user) {
-		throw new UnsupportedOperationException();
-
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.update(user);
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
 	public void deleteUser(int id) {
-		throw new UnsupportedOperationException();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			sessionFactory
+					.openSession()
+					.createQuery(
+							"delete from User where id = " + String.valueOf(id))
+					.executeUpdate();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 
 	}
 
 	@Override
-	public void createPriority(Priority priority) {
-		throw new UnsupportedOperationException();
-
+	public int createPriority(Priority priority) {
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.save(priority);
+			Query query = session.createQuery(
+					"select max(id) from Priority where user_id = :user_id")
+					.setInteger("user_id", priority.getUserId());
+			int id = ((Integer) query.uniqueResult()).intValue();
+			session.getTransaction().commit();
+			return id;
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+		return 0;
 	}
 
 	@Override
 	public Priority getPriorityById(int id) {
-		throw new UnsupportedOperationException();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			return (Priority) session.get(Priority.class, id);
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
 	public ArrayList<Priority> getAllPriorities() {
-		throw new UnsupportedOperationException();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			return new ArrayList<Priority>(session.createCriteria(
+					Priority.class).list());
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+	}	
+
+	@Override
+	public ArrayList<Priority> getPrioritiesForUser(int user_id) {
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			Query query = session
+					.createQuery(
+							"from Priority where user_id = :user_id")
+					.setInteger("user_id", user_id);
+			return new ArrayList<Priority>(query.list());
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
 	public void updatePriority(Priority priority) {
-		throw new UnsupportedOperationException();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.update(priority);
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+	}	
 
+	@Override
+	public int getDefaultPriorityIdForUser(int user_id) {
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			Query query = session.createQuery(
+					"select min(id) from Priority where user_id = :user_id")
+					.setInteger("user_id", user_id);
+			int id = ((Integer) query.uniqueResult()).intValue();
+			session.getTransaction().commit();
+			return id;
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public void changePriorityToDefault(int priority_id, int default_id) {
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			Query query = session.createQuery(
+					"update Task set priority_id = :default_id where priority_id = :priority_id")
+					.setInteger("priority_id", priority_id)
+					.setInteger("default_id", default_id);
+			query.executeUpdate();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}		
 	}
 
 	@Override
 	public void deletePriority(int id) {
-		throw new UnsupportedOperationException();
-
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			sessionFactory
+					.openSession()
+					.createQuery(
+							"delete from Priority where id = "
+									+ String.valueOf(id)).executeUpdate();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
 	public void deleteAllUsers() {
-		// TODO Auto-generated method stub
-		
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.createQuery("delete from User").executeUpdate();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
 	public void deleteAllTasks() {
-		// TODO Auto-generated method stub
-		
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.createQuery("delete from Task").executeUpdate();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
 	public void deleteAllFolders() {
-		// TODO Auto-generated method stub
-		
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.createQuery("delete from Folder").executeUpdate();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 	@Override
 	public void deleteAllPriorities() {
-		// TODO Auto-generated method stub
-		
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.createQuery("delete from Priority").executeUpdate();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
 	}
 
 }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+	<definition name="baseLayout" template="/WEB-INF/jsp/main.jsp">
+		<put-attribute name="title" value="Template title" />
+		<put-attribute name="body" value="/WEB-INF/tiles/body.jsp" />
+		<put-attribute name="script" value="/WEB-INF/tiles/script.jsp" />
+	</definition>
+	<definition name="home" extends="baseLayout">
+		<put-attribute name="title" value="ToDo::home page" />
+	</definition>
+	<definition name="register" extends="baseLayout">
+		<put-attribute name="title" value="ToDo::Register now." />
+		<put-attribute name="body" value="/WEB-INF/jsp/register/register.jsp" />
+		<put-attribute name="script" value="/WEB-INF/jsp/register/registerscript.jsp" />
+	</definition>
+	<definition name="login" extends="baseLayout">
+		<put-attribute name="title" value="ToDo::Login" />
+		<put-attribute name="body" value="/WEB-INF/jsp/login/login.jsp" />
+	</definition>
+	<definition name="about" extends="baseLayout">
+		<put-attribute name="title" value="ToDo::About project" />
+		<put-attribute name="body" value="/WEB-INF/jsp/about/about.jsp" />
+	</definition>
+	<definition name="loginfailure" extends="baseLayout">
+		<put-attribute name="title" value="ToDo::Login failed!" />
+		<put-attribute name="body" value="/WEB-INF/jsp/loginFailure/loginFailurejsp" />
+	</definition>
+	<definition name="tasks" extends="baseLayout">
+		<put-attribute name="title" value="ToDo::Task manager." />
+		<put-attribute name="body" value="/WEB-INF/jsp/tasks/tasks.jsp" />
+		<put-attribute name="script" value="/WEB-INF/jsp/tasks/taskscript.jsp" />
+	</definition>
+</tiles-definitions>

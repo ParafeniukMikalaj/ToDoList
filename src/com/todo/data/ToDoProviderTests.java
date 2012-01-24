@@ -12,10 +12,11 @@ import com.todo.entities.Task;
 import com.todo.entities.User;
 import junit.framework.TestCase;
 
-public abstract class ToDoProviderTests extends TestCase{
+public abstract class ToDoProviderTests extends TestCase {
 	protected TestableToDoDataProvider provider;
+
 	protected abstract void initProvider();
-	
+
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	public void testUserTable() throws Exception {
@@ -24,11 +25,15 @@ public abstract class ToDoProviderTests extends TestCase{
 			assertNotNull(provider);
 			provider.deleteAllUsers();
 			User u = new User();
-			u.setName("test1");
+			u.setName("test123");
 			u.setEmail("test@gmail.com");
-			u.setPassword("qwer");
+			u.setPassword("qwerty");
 			provider.createUser(u);
 			provider.createUser(u);
+			assertTrue(provider.usernameAvailable("test1231"));
+			assertTrue(!provider.usernameAvailable("test123"));
+			assertTrue(provider.emailAvailable("test@gmail.com1"));
+			assertTrue(!provider.emailAvailable("test@gmail.com"));
 			ArrayList<User> users = provider.getAllUsers();
 			assertNotNull(users);
 			assertTrue(users.size() == 2);
@@ -37,11 +42,12 @@ public abstract class ToDoProviderTests extends TestCase{
 			assertTrue(newUser.getName().equals(u.getName()));
 			assertTrue(newUser.getEmail().equals(u.getEmail()));
 			assertTrue(newUser.getPassword().equals(u.getPassword()));
-			newUser.setName("test2");
+			newUser.setName("test21");
 			provider.createUser(newUser);
-			newUser.setName("test3");
+			newUser.setName("test31");
 			provider.updateUser(newUser);
 			provider.deleteAllUsers();
+
 		} catch (Exception e) {
 			logger.error("exception occured while testing user table:    "
 					+ e.getMessage());
@@ -57,11 +63,16 @@ public abstract class ToDoProviderTests extends TestCase{
 			Folder f = new Folder();
 			f.setDescription("home");
 
-			provider.createFolder(f);
-			provider.createFolder(f);
+			int id = provider.createFolder(f);
+			logger.info("first folder id = "+id);
+			id = provider.createFolder(f);
+			logger.info("second folder id = "+id);
 			ArrayList<Folder> folders = provider.getAllFolders();
 			assertNotNull(folders);
 			assertTrue(folders.size() == 2);
+			ArrayList<Folder> subFolder = provider.getSubFolders(0, 0);
+			assertNotNull(subFolder);
+			assertTrue(subFolder.size() == 2);
 			Folder newFolder = provider.getFolderById(folders.get(0).getId());
 			assertNotNull(newFolder);
 			assertTrue(newFolder.getParentId() == f.getParentId());
@@ -86,9 +97,12 @@ public abstract class ToDoProviderTests extends TestCase{
 			provider.deleteAllPriorities();
 			Priority p = new Priority();
 			p.setDescription("hign");
+			p.setColor("#ffffff");
 
-			provider.createPriority(p);
-			provider.createPriority(p);
+			int id = provider.createPriority(p);
+			logger.info("first priority id = "+id);
+			id = provider.createPriority(p);
+			logger.info("second priority id = "+id);
 			ArrayList<Priority> priorities = provider.getAllPriorities();
 			assertNotNull(priorities);
 			assertTrue(priorities.size() == 2);
@@ -108,62 +122,69 @@ public abstract class ToDoProviderTests extends TestCase{
 			assertNotNull(null);
 		}
 	}
-	
+
 	public void testTaskTable() throws Exception {
 		try {
 			initProvider();
 			assertNotNull(provider);
-
 
 			provider.deleteAllTasks();
 			provider.deleteAllPriorities();
 			provider.deleteAllFolders();
 			provider.deleteAllUsers();
 			
+			
+
 			User u = new User();
 			u.setName("test1");
 			u.setEmail("test@gmail.com");
-			u.setPassword("qwer");
-			provider.createUser(u);
-			
+			u.setPassword("qwerty");
+
 			Priority p = new Priority();
 			p.setDescription("hign");
-			
+
 			Folder f = new Folder();
 			f.setDescription("home");
-			
+
 			provider.createUser(u);
 			provider.createFolder(f);
 			provider.createPriority(p);
 			
-			int folder_id = provider.getAllFolders().get(0).getId();
-			int usert_id = provider.getAllUsers().get(0).getId();
-			int priority_id = provider.getAllPriorities().get(0).getId();	
-		
-			
+			ArrayList<User> users = provider.getAllUsers();
+			ArrayList<Priority> priorities = provider.getAllPriorities();
+			ArrayList<Folder> folders = provider.getAllFolders();
+
+			int folder_id = folders.get(0).getId();
+			int usert_id = users.get(0).getId();
+			int priority_id = priorities.get(0).getId();
+
 			Task t = new Task();
 			t.setDescription("learn spring");
 			t.setCreationDate(Calendar.getInstance().getTime());
 			t.setExpirationDate(Calendar.getInstance().getTime());
-			t.setX(111);
-			t.setY(222);
 			t.setPriorityId(priority_id);
 			t.setUserId(usert_id);
 			t.setFolderId(folder_id);
-			provider.createTask(t);
-
-			provider.createTask(t);
+			t.setX(111);
+			t.setY(222);
+			int id = provider.createTask(t);
+			logger.info("first task id = "+id);
+			id = provider.createTask(t);
+			logger.info("second task id = "+id);
+			
 			ArrayList<Task> tasks = provider.getAllTasks();
 			assertNotNull(tasks);
 			assertTrue(tasks.size() == 2);
-			Task newTask = provider.getTaskById(tasks.get(0)
-					.getId());
+			ArrayList<Task> subTasks = provider.getSubTasks(usert_id, folder_id);
+			assertNotNull(subTasks);
+			assertTrue(subTasks.size() == 2);
+			Task newTask = provider.getTaskById(tasks.get(0).getId());
 			assertNotNull(newTask);
 			newTask.setDescription("make test project");
 			provider.createTask(newTask);
 			newTask.setDescription("learn ioc");
 			provider.updateTask(newTask);
-			
+
 			provider.deleteAllTasks();
 			provider.deleteAllPriorities();
 			provider.deleteAllFolders();
@@ -174,4 +195,5 @@ public abstract class ToDoProviderTests extends TestCase{
 			assertNotNull(null);
 		}
 	}
+	
 }

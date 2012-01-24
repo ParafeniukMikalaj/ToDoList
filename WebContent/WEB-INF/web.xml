@@ -4,6 +4,28 @@
 	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
 	version="2.4">
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+       		/WEB-INF/todo-security.xml
+       		/WEB-INF/todo-data-access.xml
+   		</param-value>
+	</context-param>
+	
+	<listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+	
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
 	<servlet>
 		<servlet-name>todo</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -13,15 +35,4 @@
 		<servlet-name>todo</servlet-name>
 		<url-pattern>*.htm</url-pattern>
 	</servlet-mapping>
-	<welcome-file-list>
-		<welcome-file>
-	      index.jsp
-	    </welcome-file>
-	</welcome-file-list>
-	<jsp-config>
-		<taglib>
-			<taglib-uri>/spring</taglib-uri>
-			<taglib-location>/WEB-INF/tld/spring-form.tld</taglib-location>
-		</taglib>
-	</jsp-config>
 </web-app>

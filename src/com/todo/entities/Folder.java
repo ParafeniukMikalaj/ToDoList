@@ -1,6 +1,7 @@
 package com.todo.entities;
 
 public class Folder {
+
 	private int id;
 	private int parentId;
 	private int userId;
@@ -40,6 +41,12 @@ public class Folder {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}	
+
+	@Override
+	public String toString() {
+		return "Folder [id=" + id + ", parentId=" + parentId + ", userId="
+				+ userId + ", description=" + description + "]";
 	}
 
 }

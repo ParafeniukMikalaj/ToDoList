@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+		
+	<mvc:annotation-driven/>
+
+	<context:annotation-config/>
+
+	<context:component-scan base-package="com.todo" />		
+		
+	<context:property-placeholder
+		location="dataprovider.properties,
+		database.properties,
+		D:\JAVA\workspace\ToDoList\WebContent\database.properties,
+		D:\JAVA\workspace\ToDoList\WebContent\dataprovider.properties"
+		ignore-resource-not-found="true" />
+		
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${database.driverClassName}" />
+		<property name="url" value="${database.connectionString}" />
+		<property name="username" value="${database.userName}" />
+		<property name="password" value="${database.userPassword}" />
+	</bean>
+
+	<bean id="hibernateSessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingResources">
+			<list>
+				<value>com/todo/data/hibernate/Folder.hbm.xml</value>
+				<value>com/todo/data/hibernate/User.hbm.xml</value>
+				<value>com/todo/data/hibernate/Priority.hbm.xml</value>
+				<value>com/todo/data/hibernate/Task.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect=org.hibernate.dialect.MySQLDialect
+			</value>
+		</property>
+	</bean>
+			
+</beans>

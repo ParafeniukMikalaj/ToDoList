@@ -6,6 +6,6 @@
     <h1>ToDo - list of tasks</h1>
     <p>This is my test.</p>
     <%-- Redirected because we can't set the welcome page to a virtual URL. --%>
-	<c:redirect url="/hello.htm"/>
+	<c:redirect url="/about.htm"/>
   </body>
 </html>

@@ -1,10 +1,15 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
-
 <html>
-  <head><title><fmt:message key="heading"/></title></head>
+  <head>
+	  <title><fmt:message key="heading"/></title>
+  </head>
   <body>
   	<h1><fmt:message key="heading"/></h1>
     <p><fmt:message key="greeting"/> <c:out value="${model.now}"/></p>
+    <p>to continuer work
+    <a href="<c:url value="login.htm"/>">login</a>or
+    <a href="<c:url value="register.htm"/>">register</a>
+    </p>
     <c:forEach items="${model.tasks}" var="task">
       <c:out value="${task.description}"/> <i>$<c:out value="${task.creationDate}"/></i><br><br>
     </c:forEach>

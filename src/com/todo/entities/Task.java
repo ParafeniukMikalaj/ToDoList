@@ -4,16 +4,35 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Task {
+
 	private int id;
 	private int userId;
 	private int priorityId;
 	private int delayedTimes;
 	private int folderId;
+	private String description;
 	private int x;
 	private int y;
-	private String description;
 	private Date creationDate;
 	private Date expirationDate;
+	private long creationDateLong;
+	private long expirationDateLong;
+
+	protected long getCreationDateLong() {
+		return creationDateLong;
+	}
+
+	protected void setCreationDateLong(long creationDateLong) {
+		this.creationDateLong = creationDateLong;
+	}
+
+	protected long getExpirationDateLong() {
+		return expirationDateLong;
+	}
+
+	protected void setExpirationDateLong(long expirationDateLong) {
+		this.expirationDateLong = expirationDateLong;
+	}
 
 	public Task() {
 		description = "<initial value>";
@@ -61,6 +80,14 @@ public class Task {
 		this.folderId = folderId;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public int getX() {
 		return x;
 	}
@@ -77,24 +104,18 @@ public class Task {
 		this.y = y;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public Date getCreationDate() {
 		return creationDate;
 	}
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+		this.creationDateLong = creationDate.getTime();
 	}
 
 	public void setCreationDate(long miliseconds) {
 		this.creationDate = new Date(miliseconds);
+		this.creationDateLong = miliseconds;
 	}
 
 	public Date getExpirationDate() {
@@ -103,10 +124,22 @@ public class Task {
 
 	public void setExpirationDate(Date expirationDate) {
 		this.expirationDate = expirationDate;
+		this.expirationDateLong = expirationDate.getTime();
 	}
 
 	public void setExpirationDate(long miliseconds) {
 		this.expirationDate = new Date(miliseconds);
+		this.expirationDateLong = miliseconds;
+	}
+
+	@Override
+	public String toString() {
+		return "Task [id=" + id + ", userId=" + userId + ", priorityId="
+				+ priorityId + ", delayedTimes=" + delayedTimes + ", folderId="
+				+ folderId + ", description=" + description + ", creationDate="
+				+ creationDate + ", expirationDate=" + expirationDate
+				+ ", creationDateLong=" + creationDateLong
+				+ ", expirationDateLong=" + expirationDateLong + "]";
 	}
 
 }
