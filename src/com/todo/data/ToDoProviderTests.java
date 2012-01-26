@@ -12,13 +12,26 @@ import com.todo.entities.Task;
 import com.todo.entities.User;
 import junit.framework.TestCase;
 
+/**
+ * Class which contains test of all 4 tables
+ * descendants: {@link com.todo.data.hibernate.HibernateToDoDataProviderTests}
+ * {@link com.todo.data.jdbc.JDBCProviderTests}
+ * @author Mikalai
+ *
+ */
 public abstract class ToDoProviderTests extends TestCase {
 	protected TestableToDoDataProvider provider;
 
+	/**
+	 * this method should be redefined in descendants
+	 */
 	protected abstract void initProvider();
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	/**
+	 * tests to be performed on user table
+	 */
 	public void testUserTable() throws Exception {
 		try {
 			initProvider();
@@ -28,16 +41,13 @@ public abstract class ToDoProviderTests extends TestCase {
 			u.setName("test123");
 			u.setEmail("test@gmail.com");
 			u.setPassword("qwerty");
-			provider.createUser(u);
+			int id = provider.createUser(u);
 			provider.createUser(u);
 			assertTrue(provider.usernameAvailable("test1231"));
 			assertTrue(!provider.usernameAvailable("test123"));
 			assertTrue(provider.emailAvailable("test@gmail.com1"));
 			assertTrue(!provider.emailAvailable("test@gmail.com"));
-			ArrayList<User> users = provider.getAllUsers();
-			assertNotNull(users);
-			assertTrue(users.size() == 2);
-			User newUser = provider.getUserById(users.get(0).getId());
+			User newUser = provider.getUserById(id);
 			assertNotNull(newUser);
 			assertTrue(newUser.getName().equals(u.getName()));
 			assertTrue(newUser.getEmail().equals(u.getEmail()));
@@ -55,6 +65,9 @@ public abstract class ToDoProviderTests extends TestCase {
 		}
 	}
 
+	/**
+	 * tests to be performed on folder table
+	 */
 	public void testFolderTable() throws Exception {
 		try {
 			initProvider();
@@ -67,13 +80,10 @@ public abstract class ToDoProviderTests extends TestCase {
 			logger.info("first folder id = "+id);
 			id = provider.createFolder(f);
 			logger.info("second folder id = "+id);
-			ArrayList<Folder> folders = provider.getAllFolders();
-			assertNotNull(folders);
-			assertTrue(folders.size() == 2);
 			ArrayList<Folder> subFolder = provider.getSubFolders(0);
 			assertNotNull(subFolder);
 			assertTrue(subFolder.size() == 2);
-			Folder newFolder = provider.getFolderById(folders.get(0).getId());
+			Folder newFolder = provider.getFolderById(id);
 			assertNotNull(newFolder);
 			assertTrue(newFolder.getParentId() == f.getParentId());
 			assertTrue(newFolder.getDescription().equals(f.getDescription()));
@@ -90,6 +100,9 @@ public abstract class ToDoProviderTests extends TestCase {
 		}
 	}
 
+	/**
+	 * tests to be performed on priority table
+	 */
 	public void testPriorityTable() throws Exception {
 		try {
 			initProvider();
@@ -103,11 +116,7 @@ public abstract class ToDoProviderTests extends TestCase {
 			logger.info("first priority id = "+id);
 			id = provider.createPriority(p);
 			logger.info("second priority id = "+id);
-			ArrayList<Priority> priorities = provider.getAllPriorities();
-			assertNotNull(priorities);
-			assertTrue(priorities.size() == 2);
-			Priority newPriority = provider.getPriorityById(priorities.get(0)
-					.getId());
+			Priority newPriority = provider.getPriorityById(id);
 			assertNotNull(newPriority);
 			assertTrue(newPriority.getDescription().equals(p.getDescription()));
 			assertTrue(newPriority.getUserId() == p.getUserId());
@@ -123,6 +132,9 @@ public abstract class ToDoProviderTests extends TestCase {
 		}
 	}
 
+	/**
+	 * tests to be performed on task table
+	 */
 	public void testTaskTable() throws Exception {
 		try {
 			initProvider();
@@ -146,18 +158,10 @@ public abstract class ToDoProviderTests extends TestCase {
 			Folder f = new Folder();
 			f.setDescription("home");
 
-			provider.createUser(u);
-			provider.createFolder(f);
-			provider.createPriority(p);
+			int usert_id = provider.createUser(u);
+			int folder_id = provider.createFolder(f);
+			int priority_id = provider.createPriority(p);
 			
-			ArrayList<User> users = provider.getAllUsers();
-			ArrayList<Priority> priorities = provider.getAllPriorities();
-			ArrayList<Folder> folders = provider.getAllFolders();
-
-			int folder_id = folders.get(0).getId();
-			int usert_id = users.get(0).getId();
-			int priority_id = priorities.get(0).getId();
-
 			Task t = new Task();
 			t.setDescription("learn spring");
 			t.setCreationDate(Calendar.getInstance().getTime());
@@ -172,13 +176,10 @@ public abstract class ToDoProviderTests extends TestCase {
 			id = provider.createTask(t);
 			logger.info("second task id = "+id);
 			
-			ArrayList<Task> tasks = provider.getAllTasks();
-			assertNotNull(tasks);
-			assertTrue(tasks.size() == 2);
 			ArrayList<Task> subTasks = provider.getSubTasks(folder_id);
 			assertNotNull(subTasks);
 			assertTrue(subTasks.size() == 2);
-			Task newTask = provider.getTaskById(tasks.get(0).getId());
+			Task newTask = provider.getTaskById(id);
 			assertNotNull(newTask);
 			newTask.setDescription("make test project");
 			provider.createTask(newTask);

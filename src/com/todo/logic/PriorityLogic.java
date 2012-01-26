@@ -6,8 +6,12 @@ import org.springframework.stereotype.Component;
 
 import com.todo.data.DataProviderFactory;
 import com.todo.data.ToDoDataProvider;
-import com.todo.entities.Priority;
 
+/**
+ * Class defines business logic for managing priorities 
+ * which can not be provided by {@link com.todo.data.ToDoDataProvider}
+ * @author Mikalai
+ */
 @Component
 public class PriorityLogic {
 
@@ -18,10 +22,14 @@ public class PriorityLogic {
 		PriorityLogic.provider = providerFactory.getDataProvider();
 	}
 
-	public static void updatePriority(Priority priority) {
-		provider.updatePriority(priority);
-	}
-
+	/**
+	 * Provider custom logic for deleting priority
+	 * finds all tasks this deleted priority, changes theirs priority to 
+	 * default, and only then performs deletion
+	 * @param priorityId priority id
+	 * @param userId user id
+	 * @return true if success false otherwise
+	 */
 	public static boolean deletePriority(int priorityId, int userId) {
 		int defaultId = provider.getDefaultPriorityIdForUser(userId);
 		if(priorityId==defaultId)

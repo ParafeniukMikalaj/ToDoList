@@ -3,6 +3,10 @@ package com.todo.entities;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * entity class which specifies task
+ * @author Mikalai
+ */
 public class Task {
 
 	private int id;
@@ -15,7 +19,13 @@ public class Task {
 	private int y;
 	private Date creationDate;
 	private Date expirationDate;
+	/**
+	 * is needed to simple conversation with db
+	 */
 	private long creationDateLong;
+	/**
+	 * is needed to simple conversation with db
+	 */
 	private long expirationDateLong;
 
 	protected long getCreationDateLong() {

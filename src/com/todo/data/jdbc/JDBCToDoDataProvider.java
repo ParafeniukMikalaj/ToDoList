@@ -17,6 +17,10 @@ import com.todo.entities.Priority;
 import com.todo.entities.Task;
 import com.todo.entities.User;
 
+/**
+ * JDBC based implementation of {@link com.todo.data.ToDoDataProvider}
+ * @author Mikalai
+ */
 @Component(value="jdbcProvider")
 public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 
@@ -27,6 +31,10 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	
+	/**
+	 * class specific for jdbc to map {@link com.todo.entities.Task}
+	 * @author Mikalai
+	 */
 	private static final class TaskMapper implements RowMapper<Task> {
 
 		public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -45,6 +53,10 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**
+	 * class specific for jdbc to map {@link com.todo.entities.Folder}
+	 * @author Mikalai
+	 */
 	private static final class FolderMapper implements RowMapper<Folder> {
 
 		public Folder mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -57,6 +69,10 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**
+	 * class specific for jdbc to map {@link com.todo.entities.User}
+	 * @author Mikalai
+	 */
 	private static final class UserMapper implements RowMapper<User> {
 
 		public User mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -71,6 +87,10 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**
+	 * class specific for jdbc to map {@link com.todo.entities.Priority}
+	 * @author Mikalai
+	 */
 	private static final class PriorityMapper implements RowMapper<Priority> {
 
 		public Priority mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -97,12 +117,14 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 		return id;
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public Task getTaskById(int id) {
 		String sql = "select * from Task where id = ?";
 		return jdbcTemplate.queryForObject(sql, new TaskMapper(), id);
 	}
 	
+	/**{@inheritDoc}*/
 	@Override
 	public ArrayList<Task> getSubTasks(int folder_id) {
 		String sql = "select * from Task where folder_id = ?";
@@ -110,13 +132,7 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 				new TaskMapper(), folder_id));
 	}
 
-	@Override
-	public ArrayList<Task> getAllTasks() {
-		String sql = "select * from Task";
-		return new ArrayList<Task>(jdbcTemplate.query(sql,
-				new TaskMapper()));
-	}
-
+	/**{@inheritDoc}*/
 	@Override
 	public void updateTask(Task task) {
 		String sql = "Update Task set description = ?, priority_id = ?, creation_date = ?, expiration_date = ?, user_id = ?, delayed_times = ?, folder_id = ?, x = ?, y = ? where id = ?";
@@ -126,12 +142,14 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 				.getDelayedTimes(), task.getFolderId(), task.getId(), task.getX(), task.getY());
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteTask(int id) {
 		String sql = "delete from Task where id = ?";
 		jdbcTemplate.update(sql, id);
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public int createFolder(Folder folder) {
 		String sql = "INSERT INTO Folder (description, user_id, parent_id) VALUES (?, ?, ?)";
@@ -143,12 +161,14 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public Folder getFolderById(int id) {
 		String sql = "select * from Folder where id = ?";
 		return jdbcTemplate.queryForObject(sql, new FolderMapper(), id);
 	}
 	
+	/**{@inheritDoc}*/
 	@Override
 	public ArrayList<Folder> getSubFolders(int parent_id) {
 		String sql = "select * from Folder where parent_id = ?";
@@ -156,13 +176,7 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 				new FolderMapper(), parent_id));
 	}
 
-	@Override
-	public ArrayList<Folder> getAllFolders() {
-		String sql = "select * from Folder";
-		return new ArrayList<Folder>(jdbcTemplate.query(sql,
-				new FolderMapper()));
-	}
-
+	/**{@inheritDoc}*/
 	@Override
 	public void updateFolder(Folder folder) {
 		String sql = "Update Folder set description = ?, user_id = ?, parent_id = ? where id = ?";
@@ -171,12 +185,14 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteFolder(int id) {
 		String sql = "delete from Folder where id = ?";
 		jdbcTemplate.update(sql, id);
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public int createUser(User user) {
 		String sql = "INSERT INTO User (name, email, password, demo, view) VALUES (?, ?, ?, ?, ?)";
@@ -187,19 +203,21 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 		return id;
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public User getUserById(int id) {
 		String sql = "select * from User where id = ?";
 		return jdbcTemplate.queryForObject(sql, new UserMapper(), id);
 	}	
 
+	/**{@inheritDoc}*/
 	@Override
 	public User getUserByName(String name) {
 		String sql = "select * from User where name = ?";
 		return jdbcTemplate.queryForObject(sql, new UserMapper(), name);
 	}
 	
-
+	/**{@inheritDoc}*/
 	@Override
 	public boolean usernameAvailable(String name) {
 		String sql = "select count(0) from User where name = ?";
@@ -209,6 +227,7 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 		return false;
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public boolean emailAvailable(String email) {
 		String sql = "select count(0) from User where email = ?";
@@ -218,13 +237,7 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 		return false;
 	}
 
-	@Override
-	public ArrayList<User> getAllUsers() {
-		String sql = "select * from User";
-		return new ArrayList<User>(jdbcTemplate.query(sql,
-				new UserMapper()));
-	}
-
+	/**{@inheritDoc}*/
 	@Override
 	public void updateUser(User user) {
 		String sql = "Update User set name = ?, email = ?, password = ?, demo = ?, view = ? where id = ?";
@@ -232,12 +245,14 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 				user.getPassword(), user.getId(), user.isDemo(), user.isView());
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteUser(int id) {
 		String sql = "delete from User where id = ?";
 		jdbcTemplate.update(sql, id);
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public int createPriority(Priority priority) {
 		String sql = "INSERT INTO Priority (description, user_id, color) VALUES (?, ?, ?)";
@@ -248,25 +263,21 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 		return id;
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public Priority getPriorityById(int id) {
 		String sql = "select * from Priority where id = ?";
 		return jdbcTemplate.queryForObject(sql, new PriorityMapper(), id);
 	}
 
-	@Override
-	public ArrayList<Priority> getAllPriorities() {
-		String sql = "select * from Priority";
-		return new ArrayList<Priority>(jdbcTemplate.query(sql,
-				new PriorityMapper()));
-	}
-
+	/**{@inheritDoc}*/
 	@Override
 	public ArrayList<Priority> getPrioritiesForUser(int user_id) {
 		String sql = "select * from Priority where user_id = ?";
 		return new ArrayList<Priority>(jdbcTemplate.query(sql, new PriorityMapper(), user_id));
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void updatePriority(Priority priority) {
 		String sql = "Update Priority set description = ?, user_id = ?, color = ? where id = ?";
@@ -274,6 +285,7 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 				priority.getUserId(), priority.getId(), priority.getColor());
 	}	
 
+	/**{@inheritDoc}*/
 	@Override
 	public int getDefaultPriorityIdForUser(int user_id) {
 		String sql = "select min(id) from Priority where user_id = ?";
@@ -281,36 +293,42 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 		return id;
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void changePriorityToDefault(int priority_id, int default_id) {
 		String sql = "Update Priority set id = ? where id = ?";
 		jdbcTemplate.update(sql, default_id, priority_id);		
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deletePriority(int id) {
 		String sql = "delete from Priority where id = ?";
 		jdbcTemplate.update(sql, id);
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteAllUsers() {
 		String sql = "delete from User";
 		jdbcTemplate.update(sql);
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteAllTasks() {
 		String sql = "delete from Task";
 		jdbcTemplate.update(sql);
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteAllFolders() {
 		String sql = "delete from Folder";
 		jdbcTemplate.update(sql);
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteAllPriorities() {
 		String sql = "delete from Priority";

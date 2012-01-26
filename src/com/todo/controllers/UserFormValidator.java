@@ -7,6 +7,11 @@ import org.springframework.validation.Validator;
 import com.todo.controllers.UserForm;
 import com.todo.logic.RegistrationLogic;
 
+/**
+ * Custom validator for class {@link UserForm}
+ * @author Mikalai
+ *
+ */
 @Component
 public class UserFormValidator implements Validator {
 
@@ -15,6 +20,10 @@ public class UserFormValidator implements Validator {
 		return UserForm.class.isAssignableFrom(clazz);
 	}
 
+	/**
+	 * Validates if user name and email are available and
+	 * that retyped password equals password
+	 */
 	@Override
 	public void validate(Object obj, Errors errors) {
 		UserForm form = (UserForm)obj;

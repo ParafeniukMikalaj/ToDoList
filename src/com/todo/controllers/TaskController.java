@@ -30,6 +30,11 @@ import com.todo.entities.User;
 import com.todo.logic.FolderLogic;
 import com.todo.logic.PriorityLogic;
 
+/**
+ * Important class which handles ajax calls from ui
+ * the base url to reach this controller is /tasks
+ * @author Mikalai
+ */
 @Controller
 @RequestMapping(value = "/tasks")
 public class TaskController {
@@ -57,18 +62,30 @@ public class TaskController {
 		obj.put("delayedTimes", t.getDelayedTimes());
 		return obj;
 	}
-	
+		
 	@Autowired
+	/**
+	 * this method is autowired is used for set SimpleDateFormat instance
+	 */
 	public void setSDF(){
 		sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	}
 
 	@Resource(name = "dataProviderFactory")
+	/**
+	 * this method is auto wired is used for set up {@link DataProviderFactory} instance
+	 * @param providerFactory - instance of provider factory
+	 */
 	public void setProviderFactory(DataProviderFactory providerFactory) {
 		TaskController.provider = providerFactory.getDataProvider();
 	}
 
-	@RequestMapping(value = "/home.htm", method = RequestMethod.GET)
+	/**
+	 * Response to get method on /home.htm
+	 * Purpose: returns the initial mark up and sets up userId in session
+	 * @return "tasks" - the name of the view
+	 */
+	@RequestMapping(value = "/home.htm", method = RequestMethod.GET)	
 	public String getView(HttpServletRequest request, HttpSession session) throws ServletException,
 			IOException {
 		String userName = request.getUserPrincipal().getName();
@@ -77,6 +94,14 @@ public class TaskController {
 		return "tasks";
 	}	
 
+	/**
+	 * Response to post method on /createfolder.htm 
+	 * Purpose: create folder
+	 * consumed parameters must be passed in json format in post with key="data" 
+	 * "name" - required description of folder
+	 * "parent_id" required id of parent folder
+	 * @return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/createfolder.htm", method = RequestMethod.POST, produces = "application/json")
 	public String createFolder(HttpServletRequest request, HttpSession session) throws ServletException,
@@ -104,6 +129,14 @@ public class TaskController {
 		} 
 	}	
 
+	/**
+	 * Response to post method on /createfolder.htm 
+	 * Purpose: update folder
+	 * consumed parameters must be passed in json format in post with key="data"
+	 * "parent_id" required id of parent folder
+	 * "name" - required description of folder
+	 * @return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/updatefolder.htm", method = RequestMethod.POST, produces = "application/json")
 	public String updateFolder(HttpServletRequest request, HttpSession session) throws ServletException,
@@ -128,6 +161,13 @@ public class TaskController {
 		} 
 	}	
 
+	/**
+	 * Response to post method on /getfolders.htm 
+	 * Purpose: get sub folders of some folder
+	 * consumed parameters must be passed in json format in post with key="data" 
+	 * "parent_id" required id of parent folder
+	 * @return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/getfolders.htm", method = RequestMethod.POST, produces = "application/json")
 	public String getFolders(HttpServletRequest request, HttpSession session) throws ServletException,
@@ -148,6 +188,13 @@ public class TaskController {
 		} 
 	}	
 
+	/**
+	 * Response to post method on /deletefolder.htm 
+	 * Purpose: delete folder by id and all related tasks and subfolders
+	 * consumed parameters must be passed in json format in post with key="data" 
+	 * "folder_id" required id of folder
+	 * @return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/deletefolder.htm", method = RequestMethod.POST, produces = "application/json")
 	public String deleteFolder(HttpServletRequest request, HttpSession session) throws ServletException,
@@ -171,6 +218,11 @@ public class TaskController {
 		} 
 	}
 	
+	/**
+	 * Response to post method on /loadsettings.htm 
+	 * Purpose: check if user is in demo mode, and get type of view
+	 * @return Return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/loadsettings.htm", method = RequestMethod.GET, produces="application/json")
 	public String loadSettings(HttpSession session) throws ServletException, IOException, JSONException {
@@ -191,6 +243,14 @@ public class TaskController {
 		} 		
 	}
 	
+	/**
+	 * Response to post method on /updatesettings.htm 
+	 * Purpose: save user settings
+	 * consumed parameters must be passed in json format in post with key="data" 
+	 * "view" optional type of view
+	 * "demo" optional demo mode
+	 * @return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/updatesettings.htm", method = RequestMethod.POST, produces = "application/json")
 	public String updateSettings(HttpServletRequest request, HttpSession session) throws ServletException,
@@ -215,6 +275,14 @@ public class TaskController {
 		} 
 	}
 	
+	/**
+	 * Response to post method on /createpriority.htm 
+	 * Purpose: create a new priority
+	 * consumed parameters must be passed in json format in post with key="data" 
+	 * "color" required color of priority
+	 * "description" required description of priority
+	 * @return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/createpriority.htm", method = RequestMethod.POST, produces = "application/json")
 	public String createPriority(HttpServletRequest request, HttpSession session) throws ServletException,
@@ -242,9 +310,14 @@ public class TaskController {
 		} 
 	}
 
+	/**
+	 * Response to get method on /loadpriorities.htm 
+	 * Purpose: initial load of all user priorities
+	 * @return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/loadpriorities.htm", method = RequestMethod.GET, produces="application/json")
-	public String loadPriorities(HttpSession session) throws ServletException, IOException, JSONException {
+	public String loadPriorities(HttpSession session) throws ServletException, IOException, JSONException { 
 		JSONObject res = new JSONObject();
 		try {
 			int userId = (Integer) session.getAttribute("user_id");
@@ -262,6 +335,15 @@ public class TaskController {
 		} 	
 	}
 	
+	/**
+	 * Response to post method on /updatepriority.htm
+	 * Purpose: update priority color and/or description
+	 * consumed parameters must be passed in json format in post with key="data"
+	 * "priority_id" required id of priority
+	 * "color" optional color of priority
+	 * "description" optional description of priority
+	 * @return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/updatepriority.htm", method = RequestMethod.POST, produces = "application/json")
 	public String updatePriority(HttpServletRequest request, HttpSession session) throws ServletException,
@@ -286,6 +368,13 @@ public class TaskController {
 		} 
 	}
 	
+	/**
+	 * Response to post method on /deletepriority.htm
+	 * Purpose: delete priority by and set tasks priorities to default
+	 * consumed parameters must be passed in json format in post with key="data"
+	 * "priority_id" required id of priority
+	 * @return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/deletepriority.htm", method = RequestMethod.POST, produces = "application/json")
 	public String deletePriority(HttpServletRequest request, HttpSession session) throws ServletException,
@@ -310,6 +399,18 @@ public class TaskController {
 		} 
 	}		
 
+	/**
+	 * Response to post method on /createtask.htm
+	 * Purpose: create new task
+	 * consumed parameters must be passed in json format in post with key="data"
+	 * "priorityId" required id of priority
+	 * "folderId" required id of folder
+	 * "x" optional x-coordinate
+	 * "y" optional y-coordinate
+	 * "description" required description of task
+	 * "expirationDate" required task expiration date
+	 * @return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/createtask.htm", method = RequestMethod.POST, produces = "application/json")
 	public String createTask(HttpServletRequest request, HttpSession session) throws ServletException,
@@ -358,6 +459,13 @@ public class TaskController {
 		} 
 	}
 	
+	/**
+	 * Response to post method on /gettasks.htm
+	 * Purpose: get all sub tasks of some folder
+	 * consumed parameters must be passed in json format in post with key="data"
+	 * "folder_id" required id of folder
+	 * @return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/gettasks.htm", method = RequestMethod.POST, produces="application/json")
 	public String getTasks(HttpServletRequest request, HttpSession session) throws ServletException, IOException, JSONException {
@@ -379,6 +487,18 @@ public class TaskController {
 		} 		
 	}
 
+	/**
+	 * Response to post method on /updatetask.htm
+	 * Purpose: update task
+	 * consumed parameters must be passed in json format in post with key="data"
+	 * "taskId" required id of task
+	 * "priorityId" optional id of priority
+	 * "x" optional x-coordinate
+	 * "y" optional y-coordinate
+	 * "description" optional description of task
+	 * "expirationDate" optional task expiration date
+	 * @return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/updatetask.htm", method = RequestMethod.POST, produces = "application/json")
 	public String updateTask(HttpServletRequest request, HttpSession session) throws ServletException,
@@ -422,6 +542,13 @@ public class TaskController {
 		} 
 	}	
 
+	/**
+	 * Response to post method on /deletetask.htm
+	 * Purpose: delete task by id
+	 * consumed parameters must be passed in json format in post with key="data"
+	 * "taskId" required id of task
+	 * @return json data
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/deletetask.htm", method = RequestMethod.POST, produces = "application/json")
 	public String deleteTask(HttpServletRequest request, HttpSession session) throws ServletException,

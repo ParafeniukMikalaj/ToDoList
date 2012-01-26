@@ -11,6 +11,11 @@ import com.todo.data.ToDoDataProvider;
 import com.todo.entities.Folder;
 import com.todo.entities.Task;
 
+/**
+ * Class defines business logic for managing folders 
+ * which can not be provided by {@link com.todo.data.ToDoDataProvider}
+ * @author Mikalai
+ */
 @Component
 public class FolderLogic {
 
@@ -21,6 +26,12 @@ public class FolderLogic {
 		FolderLogic.provider = providerFactory.getDataProvider();
 	}
 
+	/**
+	 * Removes the folder if it is not the root folder
+	 * and all of sub tasks and sub folders
+	 * @param folderId folder id to delete
+	 * @throws Exception occurs when trying to delete root folder 
+	 */
 	public static void deleteFolder(int folderId) throws Exception {
 		Folder f = provider.getFolderById(folderId);
 		

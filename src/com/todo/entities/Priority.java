@@ -1,5 +1,9 @@
 package com.todo.entities;
 
+/**
+ * entity class which specifies priority
+ * @author Mikalai
+ */
 public class Priority {
 	
 	private int id;

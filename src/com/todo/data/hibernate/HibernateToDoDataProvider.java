@@ -17,6 +17,10 @@ import com.todo.entities.Priority;
 import com.todo.entities.Task;
 import com.todo.entities.User;
 
+/**
+ * Hibernate based implementation of {@link com.todo.data.ToDoDataProvider}
+ * @author Mikalai
+ */
 @Component(value = "hibernateProvider")
 @SuppressWarnings("unchecked")
 public class HibernateToDoDataProvider implements TestableToDoDataProvider {
@@ -28,6 +32,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		HibernateToDoDataProvider.sessionFactory = sessionFactory;
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public int createTask(Task task) {
 		Session session = null;
@@ -52,6 +57,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		return 0;
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public Task getTaskById(int id) {
 		Session session = null;
@@ -65,6 +71,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public ArrayList<Task> getSubTasks(int folder_id) {
 		Session session = null;
@@ -83,21 +90,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
-	@Override
-	public ArrayList<Task> getAllTasks() {
-		Session session = null;
-		try {
-			session = sessionFactory.openSession();
-			return new ArrayList<Task>(session.createCriteria(Task.class)
-					.list());
-		} finally {
-			if (session != null && session.isOpen()) {
-				session.close();
-			}
-		}
-
-	}
-
+	/**{@inheritDoc}*/
 	@Override
 	public void updateTask(Task task) {
 		Session session = null;
@@ -115,6 +108,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteTask(int id) {
 		Session session = null;
@@ -134,6 +128,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public int createFolder(Folder folder) {
 		Session session = null;
@@ -157,6 +152,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		return 0;
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public Folder getFolderById(int id) {
 		Session session = null;
@@ -170,6 +166,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public ArrayList<Folder> getSubFolders(int parent_id) {
 		Session session = null;
@@ -188,21 +185,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
-	@Override
-	public ArrayList<Folder> getAllFolders() {
-		Session session = null;
-		try {
-			session = sessionFactory.openSession();
-			return new ArrayList<Folder>(session.createCriteria(Folder.class)
-					.list());
-		} finally {
-			if (session != null && session.isOpen()) {
-				session.close();
-			}
-		}
-
-	}
-
+	/**{@inheritDoc}*/
 	@Override
 	public void updateFolder(Folder folder) {
 		Session session = null;
@@ -220,6 +203,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteFolder(int id) {
 		Session session = null;
@@ -240,6 +224,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public int createUser(User user) {
 		Session session = null;
@@ -264,6 +249,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		return 0;
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public User getUserById(int id) {
 		Session session = null;
@@ -277,6 +263,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public User getUserByName(String name) {
 		Session session = null;
@@ -295,6 +282,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public boolean usernameAvailable(String name) {
 		Session session = null;
@@ -314,6 +302,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public boolean emailAvailable(String email) {
 		Session session = null;
@@ -333,20 +322,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
-	@Override
-	public ArrayList<User> getAllUsers() {
-		Session session = null;
-		try {
-			session = sessionFactory.openSession();
-			return new ArrayList<User>(session.createCriteria(User.class)
-					.list());
-		} finally {
-			if (session != null && session.isOpen()) {
-				session.close();
-			}
-		}
-	}
-
+	/**{@inheritDoc}*/
 	@Override
 	public void updateUser(User user) {
 		Session session = null;
@@ -364,6 +340,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteUser(int id) {
 		Session session = null;
@@ -386,6 +363,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public int createPriority(Priority priority) {
 		Session session = null;
@@ -409,6 +387,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		return 0;
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public Priority getPriorityById(int id) {
 		Session session = null;
@@ -422,20 +401,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
-	@Override
-	public ArrayList<Priority> getAllPriorities() {
-		Session session = null;
-		try {
-			session = sessionFactory.openSession();
-			return new ArrayList<Priority>(session.createCriteria(
-					Priority.class).list());
-		} finally {
-			if (session != null && session.isOpen()) {
-				session.close();
-			}
-		}
-	}	
-
+	/**{@inheritDoc}*/
 	@Override
 	public ArrayList<Priority> getPrioritiesForUser(int user_id) {
 		Session session = null;
@@ -453,6 +419,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void updatePriority(Priority priority) {
 		Session session = null;
@@ -470,6 +437,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}	
 
+	/**{@inheritDoc}*/
 	@Override
 	public int getDefaultPriorityIdForUser(int user_id) {
 		Session session = null;
@@ -492,6 +460,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		return 0;
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void changePriorityToDefault(int priority_id, int default_id) {
 		Session session = null;
@@ -513,6 +482,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}		
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deletePriority(int id) {
 		Session session = null;
@@ -534,6 +504,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteAllUsers() {
 		Session session = null;
@@ -551,6 +522,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteAllTasks() {
 		Session session = null;
@@ -568,6 +540,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteAllFolders() {
 		Session session = null;
@@ -585,6 +558,7 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 		}
 	}
 
+	/**{@inheritDoc}*/
 	@Override
 	public void deleteAllPriorities() {
 		Session session = null;

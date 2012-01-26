@@ -4,7 +4,10 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
-
+/**
+ * entity class which specifies user
+ * @author Mikalai
+ */
 public class User {
 	
 	private int id;

@@ -20,23 +20,40 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.todo.logic.RegistrationLogic;
 
+/**
+ * This class defines web-logic for registration process
+ * @author Mikalai
+ */
 @Controller
 public class RegistrationController {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 	UserFormValidator validator = null;
 
+	/**
+	 * This is auto wired method to setup {@link UserFormValidator}
+	 * @param validator
+	 */
 	@Autowired
 	public void setValidator(UserFormValidator validator) {
 		this.validator = validator;
 	}
 
+	/**
+	 * This method responses to get method for /register.htm
+	 * @return ModelAndView with {@link UserForm} parameter
+	 */
 	@RequestMapping(value = "/register.htm", method = RequestMethod.GET)
 	public ModelAndView showForm(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		return new ModelAndView("register", "user", new UserForm());
 	}
 
+	/**
+	 * This method responses to post method for /register.htm
+	 * Handles user registration logic
+	 * @return success : about view, fail : register view
+	 */
 	@RequestMapping(value = "/register.htm", method = RequestMethod.POST)
 	public ModelAndView handleRegistrationData(
 			@ModelAttribute("user") @Valid UserForm user, BindingResult result,
@@ -49,6 +66,11 @@ public class RegistrationController {
 		return new ModelAndView("about");
 	}
 
+	/**
+	 * This method responses ajax calls to check if user name is available
+	 * Name must be passed as post parameter with "name" key
+	 * @return true or false in json format
+	 */
 	@RequestMapping(value = "/check-users", method = RequestMethod.POST)
 	public void checkUserName(@RequestParam("name") String userName,
 			HttpServletRequest request, HttpServletResponse response)
@@ -57,6 +79,11 @@ public class RegistrationController {
 		response.getWriter().append(String.valueOf(bl));
 	}
 
+	/**
+	 * This method responses ajax calls to check if email is available
+	 * Email must be passed as post parameter with "email" key
+	 * @return true or false in json format
+	 */
 	@RequestMapping(value = "/check-email", method = RequestMethod.POST)
 	public void checkEmail(@RequestParam("email") String email,
 			HttpServletRequest request, HttpServletResponse response)

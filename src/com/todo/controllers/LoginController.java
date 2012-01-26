@@ -11,18 +11,30 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * This class defines web-logic for login process
+ * @author Mikalai
+ */
 @Controller
 public class LoginController {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	/**
+	 * This method responses to get method for /login.htm 
+	 * @return "login" - the name of the view
+	 */
 	@RequestMapping(value = "/login.htm", method = RequestMethod.GET)
-	public ModelAndView showForm() throws ServletException, IOException {
-		return new ModelAndView("login");
+	public String showForm() {
+		return "login";
 	}
 
+	/**
+	 * This method responses to get method for /login.htm 
+	 * when user login was invalid
+	 * @return "login" - the name of the view
+	 */
 	@RequestMapping(value = "/loginfailure.htm", method = RequestMethod.GET)
 	public String loginFailure(ModelMap model) throws ServletException,
 			IOException {
@@ -30,8 +42,15 @@ public class LoginController {
 		return "login";
 	}
 
+	/**
+	 * This method responses to get method for /logout.htm
+	 * used by Spring Security
+	 * @return "about" the name of the view
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/logout.htm", method = RequestMethod.GET)
-	public String logout() throws ServletException, IOException {
+	public String logout() {
 		SecurityContextHolder.getContext().setAuthentication(null);
 		return "about";
 	}

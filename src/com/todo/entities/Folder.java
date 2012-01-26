@@ -1,5 +1,9 @@
 package com.todo.entities;
 
+/**
+ * entity class which specifies folder
+ * @author Mikalai
+ */
 public class Folder {
 
 	private int id;

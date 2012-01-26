@@ -16,17 +16,28 @@ import org.springframework.stereotype.Service;
 import com.todo.data.DataProviderFactory;
 import com.todo.data.ToDoDataProvider;
 
+/**
+ * Class which is used by Spring Security to check
+ * user name and password
+ * @author Mikalai
+ */
 @Service("userDetailsService")
 public class ToDoUserService implements UserDetailsService{	
 	
 	private static ToDoDataProvider provider;
 
+	/**
+	 * reference for data provider
+	 */
 	@Resource(name="dataProviderFactory")
 	public void setProviderFactory(DataProviderFactory providerFactory) {
 		ToDoUserService.provider = providerFactory.getDataProvider();
 	}
 
 	@Override
+	/**
+	 * gets user details by his name
+	 */
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
 		List<GrantedAuthority> authList = new ArrayList<GrantedAuthority>(2);

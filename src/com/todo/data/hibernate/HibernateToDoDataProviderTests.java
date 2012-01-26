@@ -7,6 +7,11 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 import com.todo.data.ToDoProviderTests;
 import com.todo.data.hibernate.HibernateToDoDataProvider;
 
+/**
+ * Hibernate based implementation of init method of
+ * {@link com.todo.data.ToDoProviderTests}
+ * @author Mikalai
+ */
 public class HibernateToDoDataProviderTests extends ToDoProviderTests {
 
 	@Override

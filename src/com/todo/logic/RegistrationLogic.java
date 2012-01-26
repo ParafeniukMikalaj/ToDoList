@@ -15,6 +15,9 @@ import com.todo.entities.Priority;
 import com.todo.entities.Task;
 import com.todo.entities.User;
 
+/**
+ * Class defines business logic for registration of user
+ */
 @Component
 public class RegistrationLogic {
 
@@ -25,6 +28,10 @@ public class RegistrationLogic {
 		RegistrationLogic.provider = providerFactory.getDataProvider();
 	}
 
+	/**
+	 * Creates some default folders, priorities and tasks for user
+	 * @param user {@link com.todo.entities.User} user
+	 */
 	public static void registerUser(UserForm user) {
 		User u = new User();
 		u.setName(user.getName());
@@ -67,10 +74,20 @@ public class RegistrationLogic {
 		provider.createTask(t);		
 	}
 
+	/**
+	 * wraps provider function to check if user name available
+	 * @param userName user name to check
+	 * @return true if available, false otherwise
+	 */
 	public static boolean userAvailable(String userName) {
 		return provider.usernameAvailable(userName);
 	}
 
+	/**
+	 * wraps provider function to check if email available
+	 * @param email email to check
+	 * @return true if available, false otherwise
+	 */
 	public static boolean emailAvailable(String email) {
 		return provider.emailAvailable(email);
 	}
