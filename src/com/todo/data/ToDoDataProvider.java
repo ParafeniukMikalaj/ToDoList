@@ -10,7 +10,7 @@ public interface ToDoDataProvider{
 
 	public Task getTaskById(int id);
 	
-	public ArrayList<Task> getSubTasks(int user_id, int folder_id);
+	public ArrayList<Task> getSubTasks(int folder_id);
 
 	public ArrayList<Task> getAllTasks();
 
@@ -22,7 +22,7 @@ public interface ToDoDataProvider{
 
 	public Folder getFolderById(int id);
 
-	public ArrayList<Folder> getSubFolders(int user_id, int parent_id);
+	public ArrayList<Folder> getSubFolders(int parent_id);
 	
 	public ArrayList<Folder> getAllFolders();
 

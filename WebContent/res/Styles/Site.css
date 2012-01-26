@@ -397,6 +397,19 @@ input[type=submit].remove:active
 	vertical-align : middle; 
 	display : table-cell;
 }
+.addFloatDescription
+{
+	width: 130px;
+	height: 70px;
+	text-align: center;
+}
+.addListDescription
+{
+	margin-top: 0px;
+	width: 140px;
+	height: 15px;
+	text-align: center;
+}
 
 input[type=submit].flatRemove
 {

@@ -104,10 +104,10 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 	}
 	
 	@Override
-	public ArrayList<Task> getSubTasks(int user_id, int folder_id) {
-		String sql = "select * from Task where user_id = ? and folder_id = ?";
+	public ArrayList<Task> getSubTasks(int folder_id) {
+		String sql = "select * from Task where folder_id = ?";
 		return new ArrayList<Task>(jdbcTemplate.query(sql,
-				new TaskMapper(), user_id, folder_id));
+				new TaskMapper(), folder_id));
 	}
 
 	@Override
@@ -150,10 +150,10 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 	}
 	
 	@Override
-	public ArrayList<Folder> getSubFolders(int user_id, int parent_id) {
-		String sql = "select * from Folder where user_id = ? and parent_id = ?";
+	public ArrayList<Folder> getSubFolders(int parent_id) {
+		String sql = "select * from Folder where parent_id = ?";
 		return new ArrayList<Folder>(jdbcTemplate.query(sql,
-				new FolderMapper(), user_id, parent_id));
+				new FolderMapper(), parent_id));
 	}
 
 	@Override

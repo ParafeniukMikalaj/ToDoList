@@ -34,13 +34,14 @@ function isListView(){
 }
 
 function wireEvents(){
-	initSettings();
-	loadSettings();
 	initTree();	
-	initPriorities();
+	
 	loadPriorities();
-	initProxy(isListView());
-	proxy.wireEvents();
+	initPriorities();
+	
+	loadSettings();
+	initSettings();	
+	
 }
 
 function showErrorIfExist(action, data){
@@ -58,7 +59,7 @@ function showErrorIfExist(action, data){
 			message += data.message;
 		else
 			message += 'message unavailable';
-		showError('action '+action+': error with status: '+data.status+' message: '+message);
+		showError(action+' error with message: '+message);
 		return true;
 	}
 	return false;
@@ -99,9 +100,6 @@ function initTree(){
 						});
 						return res;
 					}
-				},	
-				'error' : function(xhr, status, error){
-					showError('error in ajax action: tree ajax load.');
 				}
 			}
 		}, 
@@ -121,7 +119,7 @@ function initTree(){
 		var id = $(data.rslt.obj).attr('id');
 		renameFolder(oldName, newName, id);
 	}).bind('create.jstree', function (event, data) { 
-		var parent_id = data.rslt.parent.data('id');
+		var parent_id = $(data.rslt.obj).parents('[id]').attr('id');
 		var name = data.rslt.name;
 		createFolder(name, parent_id, data.rslt.obj, data.rlbk);
 	}).bind('remove.jstree', function (event, data) { 
@@ -310,6 +308,7 @@ function createPriority(description, color){
 				};
 				priorities.push(new_priority);
 				refreshPriorities();
+				proxy.refreshTaskPriorities();
 			}
 		}, 
 		error : function(xhr, status, error) {
@@ -370,7 +369,7 @@ function deletePriority(priority_id, node){
 		} 
 	});
 }
-
+/**only shows loaded priorities. no events wired*/
 function refreshPriorities(){	
 	var container = $('#prioritiesPlaceholder').empty();	
 	$.each(priorities, function(key, value) {   
@@ -415,7 +414,7 @@ function initSettings(){
 		}
 	});
 }
-
+/**checks if user is in demo mode and calls proxy initialization*/
 function loadSettings(){
 	$.ajax({
 		url : '/ToDoList/tasks/loadsettings.htm',
@@ -429,6 +428,8 @@ function loadSettings(){
 					$('input#listView').attr('checked', true);
 				else
 					$('input#flatView').attr('checked', true);
+				initProxy(isListView());
+				proxy.wireEvents();
 			}
 		}, 
 		error : function(xhr, status, error) {
@@ -436,7 +437,10 @@ function loadSettings(){
 		} 
 	});
 }
-
+/**
+ * post settings and calls events: initProxy, proxy.wireevents,
+ * proxy.refreshTasks, proxy.refreshTasksPriorities
+ */
 function postSettings(demo, view){
 	var postData = dataToString({
 		"demo" : demo,
@@ -448,12 +452,15 @@ function postSettings(demo, view){
 		data : postData,
 		dataType : 'json',
 		success : function(data, status, xhr) {
-			showErrorIfExist('delete priority', data);
-			initProxy(isListView());
-			proxy.wireEvents();
-			proxy.refreshTasks();
-			refreshPriorities();
-			proxy.refreshTasksPriorities();		
+			if(!showErrorIfExist('post settings', data)){
+				if(view!=null){
+					proxy = initProxy(isListView());
+					proxy.wireEvents();
+					proxy.refreshTasks();
+					proxy.refreshTaskPriorities();	
+				}
+			}
+			
 		}, 
 		error : function(xhr, status, error) {
 			showError("error in ajax function. action: post settings");
@@ -488,6 +495,7 @@ function initProxy(isListView){
 		proxy.prioritySelector = '.prioritySelect';
 		proxy.priorityColor = '.taskPriorityColor';
 		proxy.deleteSelector = 'input[type=submit].remove';	
+		proxy.editInputClass = 'addListDescription';
 		
 		proxy.addColorSelector = '.taskPriorityColor';
 		proxy.addDescriptionSelector = '.addTaskDescription';		
@@ -514,9 +522,10 @@ function initProxy(isListView){
 		proxy.prioritySelector = '.flatPrioritySelect';
 		proxy.priorityColor = '.flatTaskPriorityColor';
 		proxy.deleteSelector = 'input[type=submit].flatRemove';	
+		proxy.editInputClass = 'addFloatDescription';
 		
 		proxy.addColorSelector = '.flatTaskPriorityColor';
-		proxy.addDescriptionSelector = '.addFloatDescription';		
+		proxy.addDescriptionSelector = '#addFloatDescription';		
 		proxy.addPriorityIdSelector = 'input[type]=hidden.priorityValue';
 		proxy.addPrioritySelector = '.flatPrioritySelect';
 		proxy.addExpirationSelector = '.expirationDateFlat';
@@ -546,6 +555,29 @@ function initProxy(isListView){
 		node.css('left', x);
 		node.css('top', y);
 	};
+	
+	/**refreshes priorities of all shown tasks*/
+	proxy.refreshTaskPriorities = function(){
+		$(proxy.prioritySelector).empty();
+		$.each(priorities, function(key, value) {   
+		     $(proxy.prioritySelector).append($("<option></option>").attr("value",this.id).text(this.description)); 		
+		});
+		$(proxy.prioritySelector).each(function(){
+			var task = proxy.getTaskByControl(this);
+			var priority_id = $(proxy.priorityIdSelector, task).val();
+			if (priority_id && priority_id != '') {
+				priority_id = parseInt(priority_id);
+				if (getPriorityById(priority_id) == null) {
+					priority_id = default_priority_id;
+					$(proxy.prioritySelector, task).val(default_priority_id);
+				}
+				$('option[value=' + priority_id + ']', this).attr('selected', true);
+				var color = getPriorityColor(priority_id);
+				$(proxy.priorityColor, task).css('background-color', color);
+			}
+		});
+	};
+	
 	proxy.refreshTasks = function(){
 		if(!tasks)return;
 		var taskContainer = proxy.getTasksContainer();
@@ -598,26 +630,7 @@ function initProxy(isListView){
 			}
 		});
 	};
-	proxy.refreshTaskPriorities = function(){
-		$(proxy.prioritySelector).empty();
-		$.each(priorities, function(key, value) {   
-		     $(proxy.prioritySelector).append($("<option></option>").attr("value",this.id).text(this.description)); 		
-		});
-		$(proxy.prioritySelector).each(function(){
-			var task = proxy.getTaskByControl(this);
-			var priority_id = $(proxy.priorityIdSelector, task).val();
-			if (priority_id && priority_id != '') {
-				priority_id = parseInt(priority_id);
-				if (getPriorityById(priority_id) == null) {
-					priority_id = default_priority_id;
-					$(proxy.prioritySelector, task).val(default_priority_id);
-				}
-				$('option[value=' + priority_id + ']', this).attr('selected', true);
-				var color = getPriorityColor(priority_id);
-				$(proxy.priorityColor, task).css('background-color', color);
-			}
-		});
-	};
+	/**wires all needed events after initialization*/
 	proxy.wireEvents = function(){
 		var addTemplate = $(proxy.addTemplateSelector);
 		addTemplate.removeClass('hidden');
@@ -658,12 +671,13 @@ function initProxy(isListView){
 		$(proxy.getRootContainer()).delegate(proxy.descriptionSelector, 'dblclick', function () { 
 			var content = $(this).html();
 			$(this).empty();
-			var input = $('<input type="text" class="minified"></input>');
+			var input = $('<textarea></textarea>');
 			input.attr('value', content);
+			input.addClass(proxy.editInputClass);
 			$(this).append(input);
 			input.focus();
 			input.blur(function(){
-				var container = $(this).parent();
+				var container = $(this).parent().parent();
 				var content = $(this).attr('value');
 				var task = proxy.getTaskByControl(this);
 				var taskId = $(proxy.idSelector, task).val();
@@ -674,6 +688,7 @@ function initProxy(isListView){
 		});
 		
 	};
+	return proxy;
 }
 
 function getTaskById(taskId){
@@ -705,7 +720,9 @@ function createTask(description, expirationDate, priorityId, folderId){
 		"priorityId" : priorityId,
 		"folderId" : folderId,
 		"description" : description,
-		"expirationDate" : expirationDate		
+		"expirationDate" : expirationDate, 
+		"x" : 250,
+		"y" : 250
 	});
 	$.ajax({
 		url : '/ToDoList/tasks/createtask.htm',
@@ -720,8 +737,8 @@ function createTask(description, expirationDate, priorityId, folderId){
 					"description" : description,
 					"priorityId" : priorityId,
 					"creationDate" : res.creationDate,
-					"x" : 0,
-					"y" : 0,
+					"x" : 250,
+					"y" : 250,
 					"folderId" : folderId,
 					"userId" : res.userId,
 					"delayedTimes" : res.delayedTimes,

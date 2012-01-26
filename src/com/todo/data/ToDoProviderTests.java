@@ -70,7 +70,7 @@ public abstract class ToDoProviderTests extends TestCase {
 			ArrayList<Folder> folders = provider.getAllFolders();
 			assertNotNull(folders);
 			assertTrue(folders.size() == 2);
-			ArrayList<Folder> subFolder = provider.getSubFolders(0, 0);
+			ArrayList<Folder> subFolder = provider.getSubFolders(0);
 			assertNotNull(subFolder);
 			assertTrue(subFolder.size() == 2);
 			Folder newFolder = provider.getFolderById(folders.get(0).getId());
@@ -175,7 +175,7 @@ public abstract class ToDoProviderTests extends TestCase {
 			ArrayList<Task> tasks = provider.getAllTasks();
 			assertNotNull(tasks);
 			assertTrue(tasks.size() == 2);
-			ArrayList<Task> subTasks = provider.getSubTasks(usert_id, folder_id);
+			ArrayList<Task> subTasks = provider.getSubTasks(folder_id);
 			assertNotNull(subTasks);
 			assertTrue(subTasks.size() == 2);
 			Task newTask = provider.getTaskById(tasks.get(0).getId());

@@ -60,8 +60,6 @@
 					</div>
 					<input type="text" class="expirationDateFlat" readonly="readonly">						
 				</div>
-
-				</div>
 			</div>
 			<div id="settingsContainer" class="settingsContainer">
 				<div class="tasksHeader">Settings</div>

@@ -75,154 +75,7 @@ public class TaskController {
 		User u = provider.getUserByName(userName);
 		session.setAttribute("user_id", u.getId());
 		return "tasks";
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/loadsettings.htm", method = RequestMethod.GET, produces="application/json")
-	public String loadSettings(HttpSession session) throws ServletException, IOException, JSONException {
-		JSONObject res = new JSONObject();
-		try {
-			int userId = (Integer) session.getAttribute("user_id");
-			User u = provider.getUserById(userId);
-			JSONObject settings = new JSONObject();	
-			settings.put("demo", u.isDemo());
-			settings.put("view", u.isView());
-			res.put(status, ok);
-			res.put(dataString, settings);
-			return res.toString();
-		} catch (JSONException e) {
-			res.put(status, error);
-			res.put(message, "internal error: "+e.getMessage());
-			return res.toString();
-		} 		
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/loadpriorities.htm", method = RequestMethod.GET, produces="application/json")
-	public String loadPriorities(HttpSession session) throws ServletException, IOException, JSONException {
-		JSONObject res = new JSONObject();
-		try {
-			int userId = (Integer) session.getAttribute("user_id");
-			ArrayList<Priority> priorities = provider.getPrioritiesForUser(userId);
-			int default_id = provider.getDefaultPriorityIdForUser(userId);
-			JSONArray array = new JSONArray(priorities);	
-			res.put(status, ok);
-			res.put("default_priority", default_id);
-			res.put(dataString, array);
-			return res.toString();
-		} catch (JSONException e) {
-			res.put(status, error);
-			res.put(message, "internal error: "+e.getMessage());
-			return res.toString();
-		} 	
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/updatesettings.htm", method = RequestMethod.POST, produces = "application/json")
-	public String updateSettings(HttpServletRequest request, HttpSession session) throws ServletException,
-			IOException, JSONException {
-		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
-		JSONObject res = new JSONObject();
-		try {
-			int userId = (Integer) session.getAttribute("user_id");
-			User u = provider.getUserById(userId);
-			JSONObject obj = new JSONObject(data);
-			if(obj.has("view")&&!obj.isNull("view"))				
-				u.setView(obj.getBoolean("view"));
-			if(obj.has("demo")&&!obj.isNull("demo"))
-				u.setDemo(obj.getBoolean("demo"));
-			provider.updateUser(u);	
-			res.put(status, ok);
-			return res.toString();
-		} catch (JSONException e) {
-			res.put(status, error);
-			res.put(message, "internal error: "+e.getMessage());
-			return res.toString();
-		} 
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/gettasks.htm", method = RequestMethod.POST, produces="application/json")
-	public String getTasks(HttpServletRequest request, HttpSession session) throws ServletException, IOException, JSONException {
-		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
-		JSONObject res = new JSONObject();
-		try {
-			int userId = (Integer) session.getAttribute("user_id");
-			JSONObject obj = new JSONObject(data);
-			ArrayList<Task> tasks = provider.getSubTasks(userId, obj.getInt("folder_id"));
-			JSONArray array = new JSONArray();	
-			for(Task task : tasks)
-				array.put(mapTask(task));
-			res.put(status, ok);
-			res.put(dataString, array.toString());
-			return res.toString();
-		} catch (JSONException e) {
-			res.put(status, error);
-			res.put(message, "internal error: "+e.getMessage());
-			return res.toString();
-		} 		
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/getfolders.htm", method = RequestMethod.POST, produces = "application/json")
-	public String getFolders(HttpServletRequest request, HttpSession session) throws ServletException,
-			IOException, JSONException {
-		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
-		JSONObject res = new JSONObject();
-		try {
-			int userId = (Integer) session.getAttribute("user_id");
-			JSONObject obj = new JSONObject(data);
-			ArrayList<Folder> folders = provider.getSubFolders(userId, obj.getInt("parent_id"));
-			JSONArray array = new JSONArray(folders);			
-			res.put(status, ok);
-			res.put(dataString, array.toString());
-			return res.toString();
-		} catch (JSONException e) {
-			res.put(status, error);
-			res.put(message, "internal error: "+e.getMessage());
-			return res.toString();
-		} 
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/createtask.htm", method = RequestMethod.POST, produces = "application/json")
-	public String createTask(HttpServletRequest request, HttpSession session) throws ServletException,
-			IOException, JSONException, ParseException {
-		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
-		JSONObject res = new JSONObject();
-		try {
-			int userId = (Integer) session.getAttribute("user_id");
-			JSONObject obj = new JSONObject(data);
-			int priorityId = obj.getInt("priorityId");
-			int folderId = obj.getInt("folderId");
-			String description = obj.getString("description");
-			Date expiration = sdf.parse(obj.getString("expirationDate"));
-			
-			Task t = new Task();
-			t.setUserId(userId);
-			t.setDescription(description);
-			t.setPriorityId(priorityId);
-			t.setDelayedTimes(0);
-			t.setFolderId(folderId);
-			t.setCreationDate(new Date());
-			t.setExpirationDate(expiration);
-			
-			int id = provider.createTask(t);
-			JSONObject post = new JSONObject();
-			post.put("userId", userId);
-			post.put("taskId", id);
-			post.put("delayedTimes", t.getDelayedTimes());
-			post.put("creationDate", sdf.format(t.getCreationDate()));
-			
-			res.put("data", post);
-			res.put(status, ok);
-			return res.toString();
-		} catch (JSONException e) {
-			res.put(status, error);
-			res.put(message, "internal error: "+e.getMessage());
-			return res.toString();
-		} 
-	}
+	}	
 
 	@ResponseBody
 	@RequestMapping(value = "/createfolder.htm", method = RequestMethod.POST, produces = "application/json")
@@ -249,49 +102,7 @@ public class TaskController {
 			res.put(message, "internal error: "+e.getMessage());
 			return res.toString();
 		} 
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/updatetask.htm", method = RequestMethod.POST, produces = "application/json")
-	public String updateTask(HttpServletRequest request, HttpSession session) throws ServletException,
-			IOException, JSONException, ParseException {
-		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
-		JSONObject res = new JSONObject();
-		try {
-			JSONObject obj = new JSONObject(data);
-			int taskId = obj.getInt("taskId");
-			Task t = provider.getTaskById(taskId);
-			if(obj.has("priorityId"))
-				t.setPriorityId(obj.getInt("priorityId"));
-			if(obj.has("expirationDate"))
-				t.setExpirationDate(sdf.parse(obj.getString("expirationDate")));
-				t.setDelayedTimes(t.getDelayedTimes()+1);
-			if(obj.has("description"))
-				t.setDescription(obj.getString("description"));
-			if(obj.has("x")){
-				double d = obj.getDouble("x");
-				t.setX((int) d);
-			}
-			if(obj.has("y")){
-				t.setY((int) obj.getDouble("y"));
-			}
-			provider.updateTask(t);
-			JSONObject post = new JSONObject();
-			post.put("description", t.getDescription());
-			post.put("delayedTimes", t.getDelayedTimes());
-			post.put("priorityId", t.getPriorityId());
-			post.put("expirationDate", sdf.format(t.getExpirationDate()));
-			post.put("x", t.getX());
-			post.put("y", t.getY());
-			res.put("data", post);
-			res.put(status, ok);
-			return res.toString();
-		} catch (JSONException e) {
-			res.put(status, error);
-			res.put(message, "internal error: "+e.getMessage());
-			return res.toString();
-		} 
-	}
+	}	
 
 	@ResponseBody
 	@RequestMapping(value = "/updatefolder.htm", method = RequestMethod.POST, produces = "application/json")
@@ -315,23 +126,86 @@ public class TaskController {
 			res.put(message, "internal error: "+e.getMessage());
 			return res.toString();
 		} 
-	}
-	
+	}	
+
 	@ResponseBody
-	@RequestMapping(value = "/updatepriority.htm", method = RequestMethod.POST, produces = "application/json")
-	public String updatePriority(HttpServletRequest request, HttpSession session) throws ServletException,
+	@RequestMapping(value = "/getfolders.htm", method = RequestMethod.POST, produces = "application/json")
+	public String getFolders(HttpServletRequest request, HttpSession session) throws ServletException,
 			IOException, JSONException {
 		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
 		JSONObject res = new JSONObject();
 		try {
 			JSONObject obj = new JSONObject(data);
-			int priority_id = obj.getInt("priority_id");
-			Priority p = provider.getPriorityById(priority_id);
-			if(obj.has("description"))
-				p.setDescription(obj.getString("description"));
-			if(obj.has("color"))
-				p.setColor(obj.getString("color"));
-			provider.updatePriority(p);	
+			ArrayList<Folder> folders = provider.getSubFolders(obj.getInt("parent_id"));
+			JSONArray array = new JSONArray(folders);			
+			res.put(status, ok);
+			res.put(dataString, array.toString());
+			return res.toString();
+		} catch (JSONException e) {
+			res.put(status, error);
+			res.put(message, "internal error: "+e.getMessage());
+			return res.toString();
+		} 
+	}	
+
+	@ResponseBody
+	@RequestMapping(value = "/deletefolder.htm", method = RequestMethod.POST, produces = "application/json")
+	public String deleteFolder(HttpServletRequest request, HttpSession session) throws ServletException,
+			IOException, JSONException {
+		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
+		JSONObject res = new JSONObject();
+		try {
+			JSONObject obj = new JSONObject(data);
+			int folder_id = obj.getInt("folder_id");
+			FolderLogic.deleteFolder(folder_id);
+			res.put(status, ok);
+			return res.toString();
+		} catch (JSONException e) {
+			res.put(status, error);
+			res.put(message, "internal error: "+e.getMessage());
+			return res.toString();
+		} catch (Exception e) {
+			res.put(status, error);
+			res.put(message, e.getMessage());
+			return res.toString();
+		} 
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/loadsettings.htm", method = RequestMethod.GET, produces="application/json")
+	public String loadSettings(HttpSession session) throws ServletException, IOException, JSONException {
+		JSONObject res = new JSONObject();
+		try {
+			int userId = (Integer) session.getAttribute("user_id");
+			User u = provider.getUserById(userId);
+			JSONObject settings = new JSONObject();	
+			settings.put("demo", u.isDemo());
+			settings.put("view", u.isView());
+			res.put(status, ok);
+			res.put(dataString, settings);
+			return res.toString();
+		} catch (JSONException e) {
+			res.put(status, error);
+			res.put(message, "internal error: "+e.getMessage());
+			return res.toString();
+		} 		
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/updatesettings.htm", method = RequestMethod.POST, produces = "application/json")
+	public String updateSettings(HttpServletRequest request, HttpSession session) throws ServletException,
+			IOException, JSONException {
+		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
+		JSONObject res = new JSONObject();
+		try {
+			int userId = (Integer) session.getAttribute("user_id");
+			User u = provider.getUserById(userId);
+			JSONObject obj = new JSONObject(data);
+			if(obj.has("view")&&!obj.isNull("view"))				
+				u.setView(obj.getBoolean("view"));
+			if(obj.has("demo")&&!obj.isNull("demo"))
+				u.setDemo(obj.getBoolean("demo"));
+			provider.updateUser(u);	
 			res.put(status, ok);
 			return res.toString();
 		} catch (JSONException e) {
@@ -367,6 +241,50 @@ public class TaskController {
 			return res.toString();
 		} 
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "/loadpriorities.htm", method = RequestMethod.GET, produces="application/json")
+	public String loadPriorities(HttpSession session) throws ServletException, IOException, JSONException {
+		JSONObject res = new JSONObject();
+		try {
+			int userId = (Integer) session.getAttribute("user_id");
+			ArrayList<Priority> priorities = provider.getPrioritiesForUser(userId);
+			int default_id = provider.getDefaultPriorityIdForUser(userId);
+			JSONArray array = new JSONArray(priorities);	
+			res.put(status, ok);
+			res.put("default_priority", default_id);
+			res.put(dataString, array);
+			return res.toString();
+		} catch (JSONException e) {
+			res.put(status, error);
+			res.put(message, "internal error: "+e.getMessage());
+			return res.toString();
+		} 	
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/updatepriority.htm", method = RequestMethod.POST, produces = "application/json")
+	public String updatePriority(HttpServletRequest request, HttpSession session) throws ServletException,
+			IOException, JSONException {
+		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
+		JSONObject res = new JSONObject();
+		try {
+			JSONObject obj = new JSONObject(data);
+			int priority_id = obj.getInt("priority_id");
+			Priority p = provider.getPriorityById(priority_id);
+			if(obj.has("description"))
+				p.setDescription(obj.getString("description"));
+			if(obj.has("color"))
+				p.setColor(obj.getString("color"));
+			provider.updatePriority(p);	
+			res.put(status, ok);
+			return res.toString();
+		} catch (JSONException e) {
+			res.put(status, error);
+			res.put(message, "internal error: "+e.getMessage());
+			return res.toString();
+		} 
+	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/deletepriority.htm", method = RequestMethod.POST, produces = "application/json")
@@ -390,7 +308,119 @@ public class TaskController {
 			res.put(message, "internal error: "+e.getMessage());
 			return res.toString();
 		} 
+	}		
+
+	@ResponseBody
+	@RequestMapping(value = "/createtask.htm", method = RequestMethod.POST, produces = "application/json")
+	public String createTask(HttpServletRequest request, HttpSession session) throws ServletException,
+			IOException, JSONException{
+		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
+		JSONObject res = new JSONObject();
+		try {
+			int userId = (Integer) session.getAttribute("user_id");
+			JSONObject obj = new JSONObject(data);
+			int priorityId = obj.getInt("priorityId");
+			int folderId = obj.getInt("folderId");
+			int x = obj.getInt("x");
+			int y = obj.getInt("y");
+			String description = obj.getString("description");
+			Date expiration = sdf.parse(obj.getString("expirationDate"));
+			
+			Task t = new Task();
+			t.setUserId(userId);
+			t.setDescription(description);
+			t.setPriorityId(priorityId);
+			t.setDelayedTimes(0);
+			t.setFolderId(folderId);
+			t.setCreationDate(new Date());
+			t.setExpirationDate(expiration);
+			t.setX(x);
+			t.setY(y);
+			
+			int id = provider.createTask(t);
+			JSONObject post = new JSONObject();
+			post.put("userId", userId);
+			post.put("taskId", id);
+			post.put("delayedTimes", t.getDelayedTimes());
+			post.put("creationDate", sdf.format(t.getCreationDate()));
+			
+			res.put("data", post);
+			res.put(status, ok);
+			return res.toString();
+		} catch (JSONException e) {
+			res.put(status, error);
+			res.put(message, "internal error: "+e.getMessage());
+			return res.toString();
+		} catch (ParseException e) {
+			res.put(status, error);
+			res.put(message, "enter a valid date please!");
+			return res.toString();
+		} 
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/gettasks.htm", method = RequestMethod.POST, produces="application/json")
+	public String getTasks(HttpServletRequest request, HttpSession session) throws ServletException, IOException, JSONException {
+		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
+		JSONObject res = new JSONObject();
+		try {
+			JSONObject obj = new JSONObject(data);
+			ArrayList<Task> tasks = provider.getSubTasks(obj.getInt("folder_id"));
+			JSONArray array = new JSONArray();	
+			for(Task task : tasks)
+				array.put(mapTask(task));
+			res.put(status, ok);
+			res.put(dataString, array.toString());
+			return res.toString();
+		} catch (JSONException e) {
+			res.put(status, error);
+			res.put(message, "internal error: "+e.getMessage());
+			return res.toString();
+		} 		
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/updatetask.htm", method = RequestMethod.POST, produces = "application/json")
+	public String updateTask(HttpServletRequest request, HttpSession session) throws ServletException,
+			IOException, JSONException, ParseException {
+		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
+		JSONObject res = new JSONObject();
+		try {
+			JSONObject obj = new JSONObject(data);
+			int taskId = obj.getInt("taskId");
+			Task t = provider.getTaskById(taskId);
+			if(obj.has("priorityId"))
+				t.setPriorityId(obj.getInt("priorityId"));
+			if(obj.has("expirationDate")){
+				t.setExpirationDate(sdf.parse(obj.getString("expirationDate")));
+				t.setDelayedTimes(t.getDelayedTimes()+1);
+			}
+			if(obj.has("description"))
+				t.setDescription(obj.getString("description"));
+			if(obj.has("x")){
+				double d = obj.getDouble("x");
+				t.setX((int) d);
+			}
+			if(obj.has("y")){
+				t.setY((int) obj.getDouble("y"));
+			}
+			provider.updateTask(t);
+			JSONObject post = new JSONObject();
+			post.put("description", t.getDescription());
+			post.put("delayedTimes", t.getDelayedTimes());
+			post.put("priorityId", t.getPriorityId());
+			post.put("expirationDate", sdf.format(t.getExpirationDate()));
+			post.put("x", t.getX());
+			post.put("y", t.getY());
+			res.put("data", post);
+			res.put(status, ok);
+			return res.toString();
+		} catch (JSONException e) {
+			res.put(status, error);
+			res.put(message, "internal error: "+e.getMessage());
+			return res.toString();
+		} 
+	}	
 
 	@ResponseBody
 	@RequestMapping(value = "/deletetask.htm", method = RequestMethod.POST, produces = "application/json")
@@ -407,29 +437,6 @@ public class TaskController {
 		} catch (JSONException e) {
 			res.put(status, error);
 			res.put(message, "internal error: "+e.getMessage());
-			return res.toString();
-		} 
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/deletefolder.htm", method = RequestMethod.POST, produces = "application/json")
-	public String deleteFolder(HttpServletRequest request, HttpSession session) throws ServletException,
-			IOException, JSONException {
-		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
-		JSONObject res = new JSONObject();
-		try {
-			JSONObject obj = new JSONObject(data);
-			int folder_id = obj.getInt("folder_id");
-			FolderLogic.deleteFolder(folder_id);
-			res.put(status, ok);
-			return res.toString();
-		} catch (JSONException e) {
-			res.put(status, error);
-			res.put(message, "internal error: "+e.getMessage());
-			return res.toString();
-		} catch (Exception e) {
-			res.put(status, error);
-			res.put(message, e.getMessage());
 			return res.toString();
 		} 
 	}

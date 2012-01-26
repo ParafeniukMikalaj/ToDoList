@@ -66,15 +66,14 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 	}
 
 	@Override
-	public ArrayList<Task> getSubTasks(int user_id, int folder_id) {
+	public ArrayList<Task> getSubTasks(int folder_id) {
 		Session session = null;
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
 			Query query = session
 					.createQuery(
-							"from Task where user_id = :user_id and folder_id = :folder_id")
-					.setInteger("user_id", user_id)
+							"from Task where folder_id = :folder_id")
 					.setInteger("folder_id", folder_id);
 			return new ArrayList<Task>(query.list());
 		} finally {
@@ -172,15 +171,14 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 	}
 
 	@Override
-	public ArrayList<Folder> getSubFolders(int user_id, int parent_id) {
+	public ArrayList<Folder> getSubFolders(int parent_id) {
 		Session session = null;
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
 			Query query = session
 					.createQuery(
-							" from Folder where user_id = :user_id and parent_id = :parent_id")
-					.setInteger("user_id", user_id)
+							" from Folder where parent_id = :parent_id")
 					.setInteger("parent_id", parent_id);
 			return new ArrayList<Folder>(query.list());
 		} finally {
