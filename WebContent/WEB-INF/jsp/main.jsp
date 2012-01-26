@@ -7,8 +7,7 @@
 <title><tiles:getAsString name="title" /></title>
 <link rel="stylesheet" href="/ToDoList/res/Styles/Site.css"
 	type="text/css" />
-<link rel="stylesheet" href="/ToDoList/res/js/jQuery/colorpicker/css/colorpicker.css"
-	type="text/css" />
+<tiles:insertAttribute name="themes" ignore="true" />
 </head>
 <body>
 	<div class="placeholder"></div>
@@ -43,8 +42,7 @@
 		</div>
 	</div>
 </body>
-<script type="text/javascript"
-	src="/ToDoList/res/js/jQuery/jquery-1.7.1.min.js"></script>
-<script type="text/javascript" src="/ToDoList/res/js/highlight.js"></script>
+<script type="text/javascript" src="/ToDoList/res/js/jQuery/jquery-1.7.1.min.js"></script>
 <tiles:insertAttribute name="script" ignore="true" />
+<script type="text/javascript" src="/ToDoList/res/js/highlight.js"></script>
 </html>

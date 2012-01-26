@@ -24,6 +24,7 @@ public class Task {
 
 	protected void setCreationDateLong(long creationDateLong) {
 		this.creationDateLong = creationDateLong;
+		this.creationDate = new Date(creationDateLong);
 	}
 
 	protected long getExpirationDateLong() {
@@ -32,6 +33,7 @@ public class Task {
 
 	protected void setExpirationDateLong(long expirationDateLong) {
 		this.expirationDateLong = expirationDateLong;
+		this.expirationDate = new Date(expirationDateLong);
 	}
 
 	public Task() {

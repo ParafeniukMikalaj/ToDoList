@@ -209,7 +209,7 @@ ul.about li{
 	-khtml-border-radius: 5px;
 }
 
-.taskPriority
+.taskPriorityColor
 {
 	background-color: #A0A0A0;
 	border: solid 2px #404040;
@@ -226,7 +226,7 @@ ul.about li{
 	height: 30px;
 	padding: 4px;
 	margin-top: 7px;
-	max-width: 80%;
+	max-width: 150px;
 	text-align: center left;
 }
 .taskAddDescription
@@ -241,7 +241,6 @@ ul.about li{
 }
 .prioritySelect
 {
-	float: right;
 	margin-right: 5px;
     margin-top: 10px;
 }
@@ -251,7 +250,6 @@ ul.about li{
     border: 3px solid #FF6B68;
     border-radius: 15px 15px 15px 15px;
     color: red;
-    float: right;
     font-size: 25px;
     height: 30px;
     margin: 3px 5px 2px;
@@ -292,7 +290,6 @@ input[type=submit].remove
 	height: 36px;
 	background: url("/ToDoList/res/images/remove.png") no-repeat scroll 0 0 transparent;
 	border: none;
-	float: right;
 }
 input[type=submit].remove:active
 {
@@ -335,4 +332,159 @@ input[type=submit].remove:active
 {
 	background-color: #AFFFB7;
 	border: solid 2px #54FF7C;
+}
+.right
+{
+	float: right;
+}
+.creationDate{
+	margin-top: 12px;
+	margin-right: 5px;
+}
+.expirationDate{
+	margin-top: 9px;
+	margin-right: 5px;
+}
+.addTaskDescription{
+	margin-top: 9px;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+.flatTask
+{
+	clear: both;
+	position: absolute;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	background-color: #FFE0A8;
+	width: 150px;
+	border: solid 2px #FFCD7C;
+	float left;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-khtml-border-radius: 3px;
+}
+.flatHeader
+{
+	border-bottom: 1px solid #FF8F49;
+	height: 20px;
+	clear: both;
+}
+.flatTaskPriorityColor
+{
+	background-color: #A0A0A0;
+	border: solid 1px #404040;
+	width: 16px;
+	height: 16px;
+	width: 16px;
+	float: left;
+}
+.flatPrioritySelect
+{
+	height: 18px;
+	width: 90px;
+	margin: 0 2px;
+}
+.flatDescription
+{
+	width: 150px;
+	height: 70px;
+	text-align: center;
+	background-color: #FFE9C9;
+	margin-left: 3px;	
+	vertical-align : middle; 
+	display : table-cell;
+}
+
+input[type=submit].flatRemove
+{
+	margin-top: 2px;
+	margin-right: 3px;
+	width: 14px;
+	height: 14px;
+	background: url("/ToDoList/res/images/remove-small.png") no-repeat scroll 0 0 transparent;
+	border: none;
+}
+
+input[type=submit].flatRemove:active
+{
+	background: url("/ToDoList/res/images/remove-hover-small.png") no-repeat scroll 0 0 transparent;
+}
+
+.center-margin
+{
+	margin: 2px auto;
+	text-align: center;
+}
+input[type=text].expirationDateFlat
+{
+	min-width: 0px;
+	width: 130px;	
+	margin: 2px;
+	margin-left: 7px;
+	text-align: center;
+}
+.creationDateFlat
+{
+	border-top: 1px solid #FF8F49;
+}
+
+.flatAdd
+{
+	top: 400px;
+	float: right;
+	background-color: #AFFFB7;
+	border: solid 2px #54FF7C;
+}
+.flatAddHeader
+{
+	border-bottom: 1px solid #54FF7C;
+	height: 20px;
+	clear: both;
+}
+input[type=submit].flatAdd
+{
+	margin-top: 2px;
+	margin-right: 3px;
+	width: 14px;
+	height: 14px;
+	background: url("/ToDoList/res/images/add-small.png") no-repeat scroll 0 0 transparent;
+	border: none;
+}
+input[type=submit].flatAdd:active
+{
+	background: url("/ToDoList/res/images/add-hover-small.png") no-repeat scroll 0 0 transparent;
+}
+.flatAddDescription
+{
+	width: 14px;
+	height: 70px;
+	background-color: #B2FFB2;
+	margin-left: 3px;	
+}
+.flatAddDescription textarea
+{
+	max-width: 140px;
+	height: 65px;
+}
+.delayedFlat
+{
+	background-color: #FFC3BC;
+    border: 1px solid #FF6B68;
+    border-radius: 8px;
+    color: red;
+    font-size: 12px;
+    height: 16px;
+    text-align: center;
+    width: 16px;
+    float: right;
+    margin-right: 3px;
+ }
+.zeroFlat
+{
+	background-color: #AFB9FF;
+    border: 1px solid #93A0FF;
+	color: blue;
 }

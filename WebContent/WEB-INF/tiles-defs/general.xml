@@ -7,6 +7,7 @@
 <tiles-definitions>
 	<definition name="baseLayout" template="/WEB-INF/jsp/main.jsp">
 		<put-attribute name="title" value="Template title" />
+		<put-attribute name="themes" value="/WEB-INF/tiles/themes.jsp" />
 		<put-attribute name="body" value="/WEB-INF/tiles/body.jsp" />
 		<put-attribute name="script" value="/WEB-INF/tiles/script.jsp" />
 	</definition>
@@ -32,6 +33,7 @@
 	</definition>
 	<definition name="tasks" extends="baseLayout">
 		<put-attribute name="title" value="ToDo::Task manager." />
+		<put-attribute name="themes" value="/WEB-INF/jsp/tasks/taskthemes.jsp" />
 		<put-attribute name="body" value="/WEB-INF/jsp/tasks/tasks.jsp" />
 		<put-attribute name="script" value="/WEB-INF/jsp/tasks/taskscript.jsp" />
 	</definition>

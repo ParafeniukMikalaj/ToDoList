@@ -21,14 +21,6 @@ public class FolderLogic {
 		FolderLogic.provider = providerFactory.getDataProvider();
 	}
 
-	public static void createNewFolder(Folder folder) {
-		provider.createFolder(folder);
-	}
-
-	public static void updateFolder(Folder folder) {
-		provider.updateFolder(folder);
-	}
-
 	public static ArrayList<Task> getTasksForFolder(int folderId) {
 		ArrayList<Task> tasks = provider.getAllTasks();
 		ArrayList<Task> result = new ArrayList<Task>();
@@ -49,7 +41,10 @@ public class FolderLogic {
 		return result;
 	}
 
-	public static void deleteFolder(int folderId) {
+	public static void deleteFolder(int folderId) throws Exception {
+		Folder f = provider.getFolderById(folderId);
+		if(f.getParentId()==0)
+			throw new Exception("This is root folder can't be deleted");
 		ArrayList<Folder> childs = getChildFolders(folderId);
 		for (Folder folder : childs)
 			deleteFolder(folder.getId());
