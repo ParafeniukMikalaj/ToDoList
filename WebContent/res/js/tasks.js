@@ -69,6 +69,34 @@ function showErrorIfExist(action, data){
 function dataToString(data){
 	return 'data='+JSON.stringify(data);
 }
+
+function compareDates(first, second){
+	var firstYear = first.substring(6,10);
+	var secondYear = second.substring(6,10);
+	var res = firstYear.localeCompare(secondYear);
+	if(res!=0)
+		return res;
+	var firstMonth = first.substring(3,5);
+	var secondMonth = second.substring(3,5);
+	var res = firstMonth.localeCompare(secondMonth);
+	if(res!=0)
+		return res;
+	var firstDay = first.substring(0,2);
+	var secondDay = second.substring(0,2);
+	var res = firstDay.localeCompare(secondDay);
+	if(res!=0)
+		return res;
+	var firstHour = first.substring(11,13);
+	var secondHour = second.substring(11,13);
+	var res = firstHour.localeCompare(secondHour);
+	if(res!=0)
+		return res;
+	var firstMinutes = first.substring(15,17);
+	var secondMinutes = second.substring(15,17);
+	var res = firstMinutes.localeCompare(secondMinutes);
+	if(res!=0)
+		return res;
+}
 /********************************************************************************
 							Tree functions
 ********************************************************************************/
@@ -604,6 +632,10 @@ function initProxy(isListView){
 			creationDate.append(element.creationDate);
 			var expirationDate = $(proxy.expirationSelector, current);
 			expirationDate.val(element.expirationDate);
+			var now = new Date();
+			var formatNow = now.format('dd/mm/yyyy HH:MM');			
+			if(compareDates(formatNow, element.expirationDate)>0)
+				current.addClass('expired');
 			expirationDate.datetimepicker({
 				firstDay: 1,
 				minDate: new Date(),
@@ -669,7 +701,8 @@ function initProxy(isListView){
 			updateTask(taskId, priorityId);			
 		});
 		$(proxy.getRootContainer()).delegate(proxy.descriptionSelector, 'dblclick', function () { 
-			var content = $(this).html();
+			var task = proxy.getTaskByControl(this);
+			var content = $(proxy.descriptionSelector, task).html();
 			$(this).empty();
 			var input = $('<textarea></textarea>');
 			input.attr('value', content);
