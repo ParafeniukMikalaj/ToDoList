@@ -32,14 +32,14 @@ public class FolderLogic {
 	 * @param folderId folder id to delete
 	 * @throws Exception occurs when trying to delete root folder 
 	 */
-	public static void deleteFolder(int folderId) throws Exception {
+	public static void deleteFolder(int folderId, int userId) throws Exception {
 		Folder f = provider.getFolderById(folderId);
 		
 		if(f.getParentId()==0)
 			throw new Exception("This is root folder can't be deleted");
-		ArrayList<Folder> childs = provider.getSubFolders(folderId);
+		ArrayList<Folder> childs = provider.getSubFolders(folderId, userId);
 		for (Folder folder : childs)
-			deleteFolder(folder.getId());
+			deleteFolder(folder.getId(), userId);
 		ArrayList<Task> tasks = provider.getSubTasks(folderId);
 		for (Task task : tasks)
 			provider.deleteTask(task.getId());

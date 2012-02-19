@@ -48,7 +48,11 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/tiles-servlet-2.2.2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/tiles-servlet-wildcard-2.2.2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/tiles-template-2.2.2.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/java-json.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/hibernate-validator-4.2.0.Final.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/validation-api-1.0.0.GA.jar"/>

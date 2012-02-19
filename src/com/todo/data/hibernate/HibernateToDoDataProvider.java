@@ -168,15 +168,16 @@ public class HibernateToDoDataProvider implements TestableToDoDataProvider {
 
 	/**{@inheritDoc}*/
 	@Override
-	public ArrayList<Folder> getSubFolders(int parent_id) {
+	public ArrayList<Folder> getSubFolders(int parent_id, int user_id) {
 		Session session = null;
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
 			Query query = session
 					.createQuery(
-							" from Folder where parent_id = :parent_id")
-					.setInteger("parent_id", parent_id);
+							" from Folder where parent_id = :parent_id and user_id = :user_id")
+					.setInteger("parent_id", parent_id)
+					.setInteger("user_id", user_id);
 			return new ArrayList<Folder>(query.list());
 		} finally {
 			if (session != null && session.isOpen()) {

@@ -170,10 +170,10 @@ public class JDBCToDoDataProvider implements TestableToDoDataProvider {
 	
 	/**{@inheritDoc}*/
 	@Override
-	public ArrayList<Folder> getSubFolders(int parent_id) {
-		String sql = "select * from Folder where parent_id = ?";
+	public ArrayList<Folder> getSubFolders(int parent_id, int user_id) {
+		String sql = "select * from Folder where parent_id = ? and user_id = ?";
 		return new ArrayList<Folder>(jdbcTemplate.query(sql,
-				new FolderMapper(), parent_id));
+				new FolderMapper(), parent_id, user_id));
 	}
 
 	/**{@inheritDoc}*/

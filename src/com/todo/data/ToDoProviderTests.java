@@ -80,7 +80,7 @@ public abstract class ToDoProviderTests extends TestCase {
 			logger.info("first folder id = "+id);
 			id = provider.createFolder(f);
 			logger.info("second folder id = "+id);
-			ArrayList<Folder> subFolder = provider.getSubFolders(0);
+			ArrayList<Folder> subFolder = provider.getSubFolders(0, 0);
 			assertNotNull(subFolder);
 			assertTrue(subFolder.size() == 2);
 			Folder newFolder = provider.getFolderById(id);

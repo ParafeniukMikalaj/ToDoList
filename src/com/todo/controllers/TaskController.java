@@ -175,8 +175,9 @@ public class TaskController {
 		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
 		JSONObject res = new JSONObject();
 		try {
+			int userId = (Integer) session.getAttribute("user_id");
 			JSONObject obj = new JSONObject(data);
-			ArrayList<Folder> folders = provider.getSubFolders(obj.getInt("parent_id"));
+			ArrayList<Folder> folders = provider.getSubFolders(obj.getInt("parent_id"), userId);
 			JSONArray array = new JSONArray(folders);			
 			res.put(status, ok);
 			res.put(dataString, array.toString());
@@ -202,9 +203,10 @@ public class TaskController {
 		String data = URLDecoder.decode(request.getParameter("data"), "UTF-8");
 		JSONObject res = new JSONObject();
 		try {
+			int userId = (Integer) session.getAttribute("user_id");
 			JSONObject obj = new JSONObject(data);
 			int folder_id = obj.getInt("folder_id");
-			FolderLogic.deleteFolder(folder_id);
+			FolderLogic.deleteFolder(folder_id, userId);
 			res.put(status, ok);
 			return res.toString();
 		} catch (JSONException e) {

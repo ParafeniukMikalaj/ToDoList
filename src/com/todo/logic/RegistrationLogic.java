@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.todo.controllers.UserForm;
@@ -22,10 +24,17 @@ import com.todo.entities.User;
 public class RegistrationLogic {
 
 	private static ToDoDataProvider provider;
+	
+	private static StandardPasswordEncoder encoder;
 
 	@Resource(name = "dataProviderFactory")
 	public void setProviderFactory(DataProviderFactory providerFactory) {
 		RegistrationLogic.provider = providerFactory.getDataProvider();
+	}
+	
+	@Autowired
+	public void setEncoder(){
+		encoder = new StandardPasswordEncoder();
 	}
 
 	/**
@@ -36,7 +45,7 @@ public class RegistrationLogic {
 		User u = new User();
 		u.setName(user.getName());
 		u.setEmail(user.getEmail());
-		u.setPassword(user.getPassword());
+		u.setPassword(encoder.encode(user.getPassword()));
 		int user_id = provider.createUser(u);
 		Priority p = new Priority();
 		p.setDescription("default");

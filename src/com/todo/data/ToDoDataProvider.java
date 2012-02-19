@@ -56,9 +56,10 @@ public interface ToDoDataProvider{
 	/**
 	 * get all sub folders of some folder
 	 * @param parent_id id of parent folder
+	 * @param user_d id of parent folder
 	 * @return collection of {@link Folder}
 	 */
-	public ArrayList<Folder> getSubFolders(int parent_id);
+	public ArrayList<Folder> getSubFolders(int parent_id, int user_id);
 
 	/**
 	 * update Folder

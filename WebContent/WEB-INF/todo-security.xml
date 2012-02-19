@@ -6,6 +6,9 @@
                     http://www.springframework.org/schema/security 
                     http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
+	<beans:bean id="encoder"
+	class="org.springframework.security.crypto.password.StandardPasswordEncoder" />
+
 	<http use-expressions="true">
 		<intercept-url pattern="/res/**" access="permitAll" />
 		<intercept-url pattern="/index.jsp" access="permitAll" />
@@ -28,7 +31,9 @@
 	<beans:bean id="userDetailsService" class="com.todo.security.ToDoUserService"/>
 
 	<authentication-manager>
-		<authentication-provider user-service-ref="userDetailsService" />
+		<authentication-provider user-service-ref="userDetailsService" >
+			<password-encoder ref="encoder" />
+		</authentication-provider>
 	</authentication-manager>
 
 	<!-- <authentication-manager> <authentication-provider> <user-service> <user 
